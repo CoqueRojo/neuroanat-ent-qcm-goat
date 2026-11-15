@@ -108,6 +108,8 @@ select.btn{padding:6px 8px}
 .pcs{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
 .pc div:first-child{display:flex;justify-content:space-between;font-size:13.5px}.pc span{font-weight:700;color:var(--acc)}
 .pc .pb{height:8px;border-radius:5px;background:#eef0f5;overflow:hidden;margin-top:6px}.pc .pb i{display:block;height:100%}
+.plan{display:grid;gap:6px;max-width:620px}.plan>div{display:flex;align-items:center;gap:10px;font-size:13.5px}.plan .n{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font:700 10.5px Inter;background:var(--acc);color:#fff;flex:none}.plan .t{width:250px}.plan .bar{flex:1;height:8px;border-radius:5px;background:#eef0f5;overflow:hidden}.plan .bar i{display:block;height:100%;background:var(--acc)}.plan b{width:28px;text-align:right}
+@media(max-width:820px){.plan .t{width:130px;font-size:12px}}
 .why{font-size:13.5px;padding:3px 0}.why.t{color:#1d6b45}.why.f{color:#8a3a3a}
 .mtog{display:none}
 @media(max-width:820px){.layout{display:block}aside{position:sticky;top:0;z-index:5;width:auto;height:auto;padding:12px 14px}aside .sub{display:none}aside h1{font-size:17px;margin:2px 0 8px}aside .nav{display:none}aside.open .nav{display:block;max-height:70vh;overflow:auto}.mtog{display:block;position:absolute;right:14px;top:14px;border:0;border-radius:8px;background:rgba(255,255,255,.15);color:#fff;font:700 13px Inter;padding:7px 11px}main{padding:18px}.opts,.act,.exp{margin-left:0}}
@@ -365,26 +367,36 @@ function resetCh(id){byCh(id).forEach(q=>delete state[q.id]);save();render(id)}
 
 // ================= EXAM GENERATOR =================
 const SIZES=[5,10,15,20,30,40,50,60,70,80,100];
-let EX={sel:new Set(CH.map(c=>c.id)),n:20,list:null,ans:{},sub:false};
+let EX={sel:new Set(CH.map(c=>c.id)),n:20,list:null,ans:{},sub:false,mode:"real"};
 function shuf(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+// frequency of each chapter in past exams (question counts, see analysis)
+const FREQ={n1:51,n2:98,n3:46,n4:85,n5:37,n6:39,e1:34,e2:25,e3:12,e4:34};
+function plan(ids,n){ // returns {id:count}
+ const avail=Object.fromEntries(ids.map(id=>[id,byCh(id).length]));
+ const parts={};ids.forEach(id=>(parts[part(id)]=parts[part(id)]||[]).push(id));
+ const w={};Object.values(parts).forEach(pids=>{const share=pids.length/ids.length;const tot=pids.reduce((s,id)=>s+(EX.mode==="real"?FREQ[id]:1),0);pids.forEach(id=>w[id]=share*(EX.mode==="real"?FREQ[id]:1)/tot)});
+ const cnt=Object.fromEntries(ids.map(id=>[id,0]));let left=Math.min(n,ids.reduce((s,id)=>s+avail[id],0));
+ while(left>0){ // give next question to the chapter furthest below its target, among those with questions left
+  const open=ids.filter(id=>cnt[id]<avail[id]);if(!open.length)break;
+  const tw=open.reduce((s,id)=>s+w[id],0);const placed=ids.reduce((s,id)=>s+cnt[id],0)+1;
+  let best=open[0],bd=-1e9;open.forEach(id=>{const d=placed*w[id]/tw-cnt[id];if(d>bd){bd=d;best=id}});cnt[best]++;left--}
+ return cnt}
 function buildExam(){const ids=CH.filter(c=>EX.sel.has(c.id)).map(c=>c.id);if(!ids.length)return;
- const pools={};ids.forEach(id=>pools[id]=shuf(byCh(id)));
- const max=ids.reduce((s,id)=>s+pools[id].length,0);const n=Math.min(EX.n,max);
- const out=[];let k=0;let order=shuf(ids);
- while(out.length<n){const id=order[k%order.length];if(pools[id].length)out.push(pools[id].shift());k++;
-  if(k%order.length===0)order=shuf(order.filter(x=>pools[x].length));if(!order.length)break}
- // keep chapter order for reading comfort, shuffled inside each chapter
+ const cnt=plan(ids,EX.n);let out=[];ids.forEach(id=>out=out.concat(shuf(byCh(id)).slice(0,cnt[id])));
  const rank=Object.fromEntries(CH.map((c,i)=>[c.id,i]));
  EX.list=out.sort((a,b)=>rank[a.c]-rank[b.c]);EX.ans={};EX.sub=false;render("exam")}
 function examView(){const m=document.getElementById("main");
  if(EX.list){return examRun()}
  const avail=CH.filter(c=>EX.sel.has(c.id)).reduce((s,c)=>s+byCh(c.id).length,0);
- let h=`<div class="hero2"><div class="goat">🎯</div><div class="k">Exam generator</div><h2>Build your own exam</h2><p>Pick the chapters and the number of questions. Questions are spread evenly across the chapters you choose — no 15 thyroid questions and 3 on the rest. You get your score and a detailed correction at the end.</p></div>
+ let h=`<div class="hero2"><div class="goat">🎯</div><div class="k">Exam generator</div><h2>Build your own exam</h2><p>Pick the chapters and the number of questions. In <b>Realistic</b> mode, chapters that come up most often in past exams get more questions, like in the real final; <b>Balanced</b> mode spreads them evenly. You get your score and a detailed correction at the end.</p></div>
  <div class="card"><div class="sec">1 · Chapters</div><div class="qsel">
  <button class="btn" onclick="exAll('all')">All</button><button class="btn" onclick="exAll('n')">All Neuroanatomy</button><button class="btn" onclick="exAll('e')">All ENT</button><button class="btn" onclick="exAll('none')">None</button></div>
  <div class="chk">${CH.map(c=>`<label class="${part(c.id)} ${EX.sel.has(c.id)?"on":""}"><input type="checkbox" ${EX.sel.has(c.id)?"checked":""} onchange="exTog('${c.id}')"><span class="n">${c.num}</span><span>${c.t}</span><em>${byCh(c.id).length}</em></label>`).join("")}</div>
  <div class="sec" style="margin-top:18px">2 · Number of questions</div><div class="sizes">${SIZES.map(s=>`<button class="sz ${EX.n===s?"on":""} ${s>avail?"off":""}" onclick="EX.n=${s};render('exam')">${s}</button>`).join("")}</div>
- <p class="small" style="margin:10px 0 0">${avail} questions available in the selected chapters${EX.n>avail?` — the exam will use all ${avail}.`:"."}${EX.sel.size?` About ${Math.max(1,Math.round(Math.min(EX.n,avail)/EX.sel.size))} per chapter.`:""}</p>
+ <div class="sec" style="margin-top:18px">3 · Distribution</div><div class="sizes"><button class="sz ${EX.mode==="real"?"on":""}" onclick="EX.mode='real';render('exam')">📊 Realistic (past-exam frequency)</button><button class="sz ${EX.mode==="eq"?"on":""}" onclick="EX.mode='eq';render('exam')">⚖️ Balanced</button></div>
+ <p class="small" style="margin:10px 0 6px">${avail} questions available${EX.n>avail?` — the exam will use all ${avail}`:""}. Planned questions per chapter:</p>
+ <div class="plan">${(()=>{const ids=CH.filter(c=>EX.sel.has(c.id)).map(c=>c.id);if(!ids.length)return "";const p=plan(ids,EX.n);return ids.map(id=>{const c=CH.find(x=>x.id===id);return `<div class="${part(id)}"><span class="n">${c.num}</span><span class="t">${c.t}</span><span class="bar"><i style="width:${100*p[id]/Math.max(...Object.values(p))}%"></i></span><b>${p[id]}</b></div>`}).join("")})()}</div>
+ <p class="small" style="margin:8px 0 0">Frequencies come from ~460 past exam questions (Fliyou tests, CC 2025–26, UM6SS neuroanatomy exams 2018–2023 and Pr Hajjij's ENT exams 2019–2024). Small chapters are capped by the number of questions available, and the rest goes to the next most frequent chapters.</p>
  <div style="margin-top:16px"><button class="btn pri big" ${EX.sel.size?"":"disabled"} onclick="buildExam()">Start the exam →</button></div></div>`;
  m.innerHTML=h}
 function exTog(id){EX.sel.has(id)?EX.sel.delete(id):EX.sel.add(id);render("exam")}
