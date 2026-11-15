@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#17244a"><link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐐</text></svg>">
+<title>NeuroAnat & ENT — QCM des profs pour les GOAT 🐐</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#17244a;--neuro:#3557a6;--ntint:#eef2fb;--ent:#a53c55;--etint:#fbeff2;--ok:#23784f;--oktint:#e6f6ee;--bad:#c0392b;--badtint:#fdecea;--line:#e3e6ee;--muted:#6c7488}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;color:#1d2436;background:#f6f7fb;line-height:1.5}
+h1,h2,h3{font-family:Lora,Georgia,serif;color:var(--navy);margin:0}
+.layout{display:flex;min-height:100vh}
+aside{width:290px;flex:none;background:var(--navy);color:#fff;padding:22px 16px;position:sticky;top:0;height:100vh;overflow:auto}
+aside .brand{font:700 11px Inter;letter-spacing:.2em;color:#9fb4e8;text-transform:uppercase}
+aside h1{color:#fff;font-size:22px;margin:6px 0 4px}
+aside .sub{font-size:12.5px;color:#c9d2ea;margin-bottom:18px}
+.plabel{font:700 10.5px Inter;letter-spacing:.16em;text-transform:uppercase;margin:18px 6px 6px;color:#9fb4e8}
+.plabel.e{color:#eab0bf}
+.nav button{all:unset;display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:14px;color:#e8ecf7;box-sizing:border-box}
+.nav button:hover{background:rgba(255,255,255,.08)}
+.nav button.on{background:#fff;color:var(--navy);font-weight:600}
+.nav .n{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:700 11px Inter;background:rgba(255,255,255,.15);flex:none}
+.nav .neuro .n{background:var(--neuro);color:#fff}.nav .ent .n{background:var(--ent);color:#fff}
+.nav .cnt{margin-left:auto;font-size:11px;opacity:.7}
+.nav .bar{height:3px;border-radius:2px;background:rgba(255,255,255,.15);margin:0 10px 4px 44px;overflow:hidden}
+.nav .bar i{display:block;height:100%;background:#7ee2a8}
+main{flex:1;padding:28px 36px 60px;max-width:980px}
+.hero{background:#fff;border:1px solid var(--line);border-left:6px solid var(--acc,var(--navy));border-radius:12px;padding:20px 24px;margin-bottom:20px}
+.hero .k{font:700 11px Inter;letter-spacing:.18em;text-transform:uppercase;color:var(--acc,var(--neuro))}
+.hero h2{font-size:28px;margin:4px 0 6px}
+.hero p{margin:0;color:var(--muted);font-size:14px}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center}
+.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 12px;font:600 13px Inter;color:var(--navy);cursor:pointer}
+.btn:hover{border-color:var(--acc,var(--neuro))}
+.btn.pri{background:var(--acc,var(--neuro));color:#fff;border-color:transparent}
+select.btn{padding:6px 8px}
+.score{margin-left:auto;font:700 14px Inter;color:var(--navy)}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:14px}
+.card .top{display:flex;gap:10px;align-items:flex-start}
+.qn{width:28px;height:28px;flex:none;border-radius:50%;background:var(--acc);color:#fff;display:grid;place-items:center;font:700 12px Inter}
+.stem{font-weight:600;color:var(--navy);font-size:15.5px}
+.meta{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.tag{font:600 10.5px Inter;padding:2px 8px;border-radius:20px;background:#eef0f5;color:#4d566c}
+.tag.multi{background:#fff3d6;color:#8a5d00}
+.opts{margin:12px 0 0 38px;display:grid;gap:7px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border:1px solid var(--line);border-radius:9px;cursor:pointer;font-size:14.5px;background:#fff;transition:.12s}
+.opt:hover{border-color:var(--acc)}
+.opt .L{font:700 12px Inter;width:22px;height:22px;border-radius:6px;display:grid;place-items:center;border:1.5px solid #c3c9d6;flex:none;color:#4d566c}
+.opt.sel{border-color:var(--acc);background:var(--tint)}.opt.sel .L{background:var(--acc);border-color:var(--acc);color:#fff}
+.done .opt{cursor:default}
+.opt.right{border-color:var(--ok);background:var(--oktint)}.opt.right .L{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--badtint)}.opt.wrong .L{background:var(--bad);border-color:var(--bad);color:#fff}
+.opt.missed{border-style:dashed;border-color:var(--ok)}
+.act{margin:12px 0 0 38px;display:flex;gap:8px;align-items:center}
+.res{font:700 13px Inter}.res.ok{color:var(--ok)}.res.ko{color:var(--bad)}
+.exp{margin:10px 0 0 38px;padding:10px 14px;border-left:4px solid var(--ok);background:#f4fbf7;border-radius:0 8px 8px 0;font-size:14px;display:none}
+.done .exp{display:block}
+.exp b{color:var(--ok)}
+.src{margin-top:10px}.src span,.og span{display:block;font-size:12.5px;color:#4d566c;margin-bottom:6px}.src img,.og img{width:100%;border:1px solid var(--line);border-radius:8px;display:block;background:#fff}
+.tag.pdf{background:#e8eefc;color:#2d4a8f}.tag.ogb{border:0;cursor:pointer;background:#17244a;color:#fff;font:600 10.5px Inter}
+.og{display:none;margin:12px 0 0 38px;padding:10px;background:#f7f8fb;border:1px dashed #b9c0cf;border-radius:8px}.og.on{display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:12px}
+.ch{background:#fff;border:1px solid var(--line);border-top:4px solid var(--acc);border-radius:12px;padding:14px 16px;cursor:pointer}
+.ch:hover{box-shadow:0 4px 14px rgba(23,36,74,.08)}
+.ch .k{font:700 10.5px Inter;letter-spacing:.14em;text-transform:uppercase;color:var(--acc)}
+.ch h3{font-size:17px;margin:3px 0 6px}
+.ch .s{font-size:12.5px;color:var(--muted)}
+.note{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 20px;font-size:14px;margin-top:18px}
+.note li{margin:3px 0}
+.empty{color:var(--muted)}
+.neuro{--acc:var(--neuro);--tint:var(--ntint)}.ent{--acc:var(--ent);--tint:var(--etint)}
+
+.gp{background:rgba(255,255,255,.07);border-radius:12px;padding:12px;margin-bottom:6px}
+.gp .row{display:flex;justify-content:space-between;font-size:12px;color:#c9d2ea;margin-bottom:6px}
+.gp .row b{color:#fff;font-size:13px}
+.track{height:8px;border-radius:6px;background:rgba(255,255,255,.12);overflow:hidden}
+.track i{display:block;height:100%;background:linear-gradient(90deg,#7d9be0,#7ee2a8);border-radius:6px;transition:width .4s}
+.hero2{position:relative;overflow:hidden;background:linear-gradient(135deg,#17244a 0%,#23397a 55%,#7d2a3f 100%);color:#fff;border-radius:18px;padding:30px 32px;margin-bottom:22px}
+.hero2 h2{color:#fff;font-size:34px;line-height:1.1;margin:6px 0 8px}
+.hero2 .k{font:700 11px Inter;letter-spacing:.2em;text-transform:uppercase;color:#c9d6f2}
+.hero2 p{color:#dbe3f6;max-width:560px;margin:0 0 18px}
+.hero2 .cta{display:flex;gap:10px;flex-wrap:wrap}
+.hero2 .cta button{border:0;border-radius:10px;padding:11px 18px;font:700 14px Inter;cursor:pointer}
+.hero2 .cta .w{background:#fff;color:#17244a}.hero2 .cta .g{background:rgba(255,255,255,.14);color:#fff}
+.hero2 .goat{position:absolute;right:26px;top:18px;font-size:78px;opacity:.9}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;gap:14px;align-items:center}
+.stat .v{font:700 24px Lora;color:var(--navy)}.stat .l{font-size:12px;color:var(--muted)}
+.ring{width:58px;height:58px;flex:none}
+.ch .pb{height:7px;border-radius:5px;background:#eef0f5;overflow:hidden;margin-top:10px}
+.ch .pb i{display:block;height:100%;background:var(--acc)}
+.ch .row{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px}
+.ch .pct{font:700 12px Inter;padding:2px 8px;border-radius:20px;background:var(--tint);color:var(--acc)}
+.badge{display:inline-block;font:700 11px Inter;padding:3px 9px;border-radius:20px;background:#fff3d6;color:#8a5d00;margin-left:6px}
+@media(max-width:820px){.stats{grid-template-columns:repeat(2,1fr)}.hero2 h2{font-size:26px}.hero2 .goat{font-size:48px}}
+.mtog{display:none}
+@media(max-width:820px){.layout{display:block}aside{position:sticky;top:0;z-index:5;width:auto;height:auto;padding:12px 14px}aside .sub{display:none}aside h1{font-size:17px;margin:2px 0 8px}aside .nav{display:none}aside.open .nav{display:block;max-height:70vh;overflow:auto}.mtog{display:block;position:absolute;right:14px;top:14px;border:0;border-radius:8px;background:rgba(255,255,255,.15);color:#fff;font:700 13px Inter;padding:7px 11px}main{padding:18px}.opts,.act,.exp{margin-left:0}}
+</style></head>
+<body><div class="layout">
+<aside id="side"><button class="mtog" onclick="document.getElementById('side').classList.toggle('open')">☰ Chapters</button>
+ <div class="brand">S3 · UM6SS · 🐐</div>
+ <h1>NeuroAnat &amp; ENT<br>QCM for the GOATs</h1>
+ <div class="sub">Past questions from Prof. Fliyou &amp; Pr Hajjij, checked against your lectures.</div>
+ <div class="gp" id="gp"></div><div class="nav" id="nav"></div>
+</aside>
+<main id="main"></main>
+</div>
+<script>const Q = [
+// ===================== CH1 INTRO & EMBRYOLOGY =====================
+{c:"n1",s:"CC ANAT3 2025–26",q:"Concerning the organisation of the encephalon:",o:["The encephalon is located in the cranial cavity","The encephalon corresponds to the posterior lobe of the pituitary gland","The encephalon secretes the locus coeruleus","The encephalon includes, among others, the cerebellum"],a:[0,3],e:"The brain (encephalon) lies in the skull and is made of cerebrum, brainstem and cerebellum. The other two statements are nonsense."},
+{c:"n1",s:"CC ANAT3 2025–26",q:"Concerning the systematisation of the nervous system:",o:["The nervous system includes an integrating part: the central nervous system","The spinal cord is part of the central nervous system","The cerebrum (cerveau) is a synonym of the encephalon","The spinal cord is part of the peripheral nervous system"],a:[0,1],e:"CNS = brain + spinal cord (command centre). The encephalon is wider than the cerebrum: it also contains brainstem and cerebellum."},
+
+// ===================== CH2 CEREBRUM =====================
+{c:"n2",s:"Fliyou Test 1",q:"What is the primary function of the falx cerebri?",o:["Memory storage","Separation of the cerebral hemispheres","Regulation of sensory perception","Motor control"],a:[1],e:"The falx cerebri is the vertical fold of dura mater in the longitudinal fissure; it incompletely separates the two hemispheres."},
+{c:"n2",s:"Fliyou Test 1",q:"Which structure separates the cerebrum from the cerebellum?",o:["Corpus callosum","Tentorium cerebelli","Falx cerebri","Internal perpendicular fissure"],a:[1],e:"The horizontal tentorium cerebelli divides the cavity into supratentorial (cerebrum) and infratentorial (cerebellum + brainstem) levels."},
+{c:"n2",s:"Fliyou Test 1",q:"The foramen of Pacchioni is associated with which structure?",o:["Corpus callosum","Tentorium cerebelli","Falx cerebri","Lateral ventricles"],a:[1],e:"It is the opening bounded by the small circumference of the tentorium cerebelli; the diencephalon–midbrain junction passes through it."},
+{c:"n2",s:"Fliyou Test 1",q:"What is the primary function of the corpus callosum?",o:["Sensory perception","Interhemispheric connectivity","Memory storage","Motor control"],a:[1],e:"White-matter tract of ~200 million fibres linking the two hemispheres."},
+{c:"n2",s:"Fliyou Test 1",q:"Which sulcus separates the frontal lobe from the parietal lobe?",o:["Lateral sulcus","Central sulcus","Parieto-occipital sulcus","Pre-occipital notch"],a:[1],e:"Central sulcus (Rolando): frontal in front, parietal behind."},
+{c:"n2",s:"Fliyou Test 3",q:"The central sulcus separates which two lobes?",o:["Frontal and temporal","Frontal and parietal","Parietal and occipital","Temporal and occipital"],a:[1],e:"Rolando = frontal | parietal. Sylvius = frontal + parietal | temporal."},
+{c:"n2",s:"Fliyou Test 2",q:"The postcentral gyrus belongs to which lobe?",o:["Occipital lobe","Frontal lobe","Temporal lobe","Parietal lobe"],a:[3],e:"The parietal lobe has 3 gyri: postcentral (sensory strip), superior and inferior parietal."},
+{c:"n2",s:"Fliyou Test 2",q:"What is the primary role of the fornix?",o:["Motor control","Memory and limbic-system connectivity","Sensory perception","Language processing"],a:[1],e:"C-shaped bundle; the main pathway of the hippocampus (limbic system, memory)."},
+{c:"n2",s:"Fliyou Test 3",q:"The fornix connects the hippocampus to which subcortical structures?",o:["Caudate nucleus","Lenticular nucleus","Mammillary bodies","Subthalamic nucleus"],a:[2],e:"Anterior columns → mammillary bodies; posterior columns → hippocampus."},
+{c:"n2",s:"Fliyou Test 2",q:"Which commissure lies in front of the fornix and the genu of the corpus callosum?",o:["Anterior white commissure","Posterior white commissure","Corpus callosum","Pyramidal tract"],a:[0],e:"The posterior white commissure lies under the pineal gland, in the posterior wall of the 3rd ventricle."},
+{c:"n2",s:"Fliyou Test 2",q:"What is the role of the corticospinal tract?",o:["Regulation of sensory perception","Voluntary motor function","Memory storage","Language processing"],a:[1],e:"Pyramidal (corticospinal) tract = main pathway of voluntary movement, from the primary motor cortex."},
+{c:"n2",s:"Fliyou Test 1",q:"What is the primary distinction between pyramidal and extrapyramidal tracts?",o:["Pyramidal tracts control voluntary movements; extrapyramidal tracts are responsible for involuntary movements","Pyramidal tracts supply the body; extrapyramidal tracts supply head and neck","Pyramidal tracts have synapses along the way; extrapyramidal tracts do not","Pyramidal tracts start in the brainstem; extrapyramidal tracts start in the cortex"],a:[0],e:"Pyramidal = voluntary movement. The basal ganglia belong to the extrapyramidal (automatic, involuntary) motor system."},
+{c:"n2",s:"Fliyou Test 1",q:"Do most fibres of the corticospinal tract decussate?",o:["Yes","No"],a:[0],e:"Most fibres (75–90%) cross in the medulla (pyramidal decussation) — so each hemisphere controls the opposite side."},
+{c:"n2",s:"Fliyou Test 3",q:"What may result from a stroke on the right side of the brain?",o:["Left-sided weakness","Right-sided weakness","Bilateral weakness","Language impairment"],a:[0],e:"Each hemisphere controls the opposite side. Language is usually in the LEFT hemisphere, so D is not expected. (The original key was wrong here.)"},
+{c:"n2",s:"Fliyou Test 3",q:"Which imaging technique is most suitable for functional mapping of the brain?",o:["CT scan","MRI (functional MRI)","EEG","PET scan"],a:[1],e:"The lecture cites functional MRI (and tractography) to map language areas before surgery."},
+{c:"n2",s:"Fliyou Test 1",q:"What is the primary function of the basal ganglia?",o:["Memory processing","Motor control","Visual perception","Auditory processing"],a:[1],e:"Subcortical nuclei that fine-tune voluntary movement (extrapyramidal system)."},
+{c:"n2",s:"Fliyou Test 3",q:"What is the role of the basal ganglia in fine-tuning voluntary movement?",o:["Receive impulses from the thalamus","Convey instructions to the limbic system","Process and adjust impulses from the cerebral cortex","Directly control skeletal muscles"],a:[2],e:"Cortex → basal ganglia (process, adjust) → thalamus → cortex → pyramidal tract → muscles."},
+{c:"n2",s:"Fliyou Test 1",q:"Which part of the basal ganglia is considered part of the limbic system?",o:["Caudate nucleus","Putamen","Nucleus accumbens","Subthalamic nucleus"],a:[2],e:"The ventral striatum (nucleus accumbens + olfactory tubercle) is considered limbic."},
+{c:"n2",s:"Fliyou Test 1",q:"Which neurotransmitter is essential for the basal ganglia, especially at the input nuclei?",o:["Serotonin","Dopamine","Acetylcholine","GABA"],a:[1],e:"Dopamine — its loss causes Parkinson's disease."},
+{c:"n2",s:"Fliyou Test 1",q:"What separates the external and internal segments of the globus pallidus?",o:["Medial medullary lamina","Internal capsule","Subthalamic nucleus","Cerebral peduncle"],a:[0],e:"A vertical sheet of white matter: the medial (internal) medullary lamina → GPe and GPi."},
+{c:"n2",s:"Fliyou Test 1",q:"In Parkinson's disease, which nucleus is often targeted for neurostimulation?",o:["Substantia nigra","Caudate nucleus","Globus pallidus","Subthalamic nucleus"],a:[3],e:"The slides name the subthalamic nucleus as the neurostimulation target (the globus pallidus is also a DBS target, noted in class — but the expected answer is D)."},
+{c:"n2",s:"Fliyou Test 2",q:"Which part of the caudate nucleus forms the lateral wall of the lateral ventricle?",o:["Head","Body","Tail","Putamen"],a:[0],e:"Head → lateral wall of the lateral ventricle; tail → roof of the inferior horn."},
+{c:"n2",s:"Fliyou Test 2",q:"The substantia nigra is functionally part of the basal ganglia despite being located in the:",o:["Forebrain","Midbrain","Hindbrain","Cerebellum"],a:[1],e:"Between the cerebral peduncle and the tegmentum of the midbrain."},
+{c:"n2",s:"Fliyou Test 3",q:"What divides the cerebral peduncles from the tegmentum on both sides of the midbrain?",o:["Substantia nigra","Internal capsule","Medial lemniscus","Subthalamic nucleus"],a:[0],e:"Lecture: the substantia nigra divides the cerebral peduncles from the tegmentum."},
+{c:"n2",s:"Fliyou Test 2",q:"In which part of the brain are the subthalamic nuclei located?",o:["Diencephalon (junction with the midbrain)","Midbrain","Hindbrain","Forebrain"],a:[0],e:"Small biconvex nuclei at the diencephalon–midbrain junction, ventral to the thalamus."},
+{c:"n2",s:"CC ANAT3 2025–26",q:"About the cerebral hemispheres:",o:["The central grey matter is made of masses of cell bodies called \"basal nuclei\"","Each hemisphere contains two ventricular cavities","Each hemisphere has a peripheral layer (pallium) made of grey matter","Each hemisphere has a peripheral layer (pallium) made of white matter"],a:[0,2],e:"Grey matter = peripheral cortex + deep basal ganglia. Each hemisphere contains ONE lateral ventricle."},
+
+// ===================== CH3 DIENCEPHALON =====================
+{c:"n3",s:"Fliyou Test 1",q:"Where is the diencephalon located?",o:["Inferior to the corpus callosum","Superior to the brainstem","Lateral to the cerebral cortex","Anterior to the thalamus"],a:[0,1],e:"Around the 3rd ventricle, above the brainstem and below the corpus callosum."},
+{c:"n3",s:"Fliyou Test 1",q:"How many main parts does the diencephalon have?",o:["Two — thalamus, hypothalamus","Three — epithalamus, thalamus, hypothalamus","Four — epithalamus, thalamus, subthalamus, hypothalamus","Five — thalamus, subthalamus, hypothalamus, pineal gland, epithalamus"],a:[2],e:"\"THE Sub\": Thalamus, Hypothalamus, Epithalamus, Subthalamus. The pineal gland belongs to the epithalamus."},
+{c:"n3",s:"Fliyou Test 1",q:"What is the primary function of the thalamus?",o:["Motor control","Homeostasis","Relay and processing centre for sensory information","Endocrine regulation"],a:[2],e:"Main relay of all senses except smell — the \"gateway to the cortex\"."},
+{c:"n3",s:"Fliyou Test 1",q:"How is one thalamus connected to the other?",o:["Via the choroid plexus","Through the pineal gland","Through the internal medullary lamina","By the interthalamic adhesion"],a:[3],e:"The interthalamic adhesion crosses the 3rd ventricle."},
+{c:"n3",s:"Fliyou Test 1",q:"What divides each thalamus into anterior, medial and lateral parts?",o:["Fornix","Pineal gland","Internal medullary lamina","Cerebral aqueduct of Sylvius"],a:[2],e:"A Y-shaped white lamina."},
+{c:"n3",s:"Fliyou Test 2",q:"Which part of the thalamus forms the posterior wall of the interventricular foramen of Monro?",o:["Anterior","Medial","Superior","Posterior"],a:[0],e:"Its anterior pole."},
+{c:"n3",s:"Fliyou Test 2",q:"What is the most posterior part of the thalamus called?",o:["Pulvinar","Habenula","Corpora quadrigemina","Internal capsule"],a:[0],e:"Pulvinar = posterior nuclei of the thalamus."},
+{c:"n3",s:"Fliyou Test 2",q:"The hypothalamus regulates:",o:["Motor responses","Sensory processing","Homeostasis","Consciousness"],a:[2],e:"Hunger, thirst, temperature, blood pressure, heart rate; interface nervous–endocrine systems."},
+{c:"n3",s:"Fliyou Test 2",q:"How many regions is the hypothalamus divided into?",o:["One","Two","Three","Four"],a:[2],e:"Supraoptic, tuberal, mammillary (\"Super Tubes Make\")."},
+{c:"n3",s:"Fliyou Test 2",q:"What connects the pituitary gland to the brain?",o:["Hypophyseal placode","Infundibulum","Median eminence","Sphenoid sinus"],a:[1],e:"The cone-shaped hypothalamus ends in the infundibulum, a tubular connection to the pituitary."},
+{c:"n3",s:"Fliyou Test 3",q:"The epithalamus includes:",o:["Fornix","Habenula","Internal medullary lamina","Corpora quadrigemina"],a:[1],e:"Habenula, stria medullaris, pineal gland, posterior commissure."},
+{c:"n3",s:"Fliyou Test 3",q:"What does the pineal gland secrete, and what is its role?",o:["Melatonin — circadian rhythms","Dopamine — motor pathways","Serotonin — homeostasis","GABA — sensory modulation"],a:[0],e:"Pinealocytes secrete melatonin in response to darkness."},
+{c:"n3",s:"Fliyou Test 3",q:"What is the function of the habenula (epithalamus)?",o:["Regulation of body temperature","Sleep–wake control","Connection between the limbic system and other brain parts","Synthesis of melatonin"],a:[2],e:"The epithalamus connects the limbic system to the rest of the brain. Melatonin is made by the pineal gland, not the habenula."},
+{c:"n3",s:"Fliyou Test 3",q:"Dysfunction of the epithalamus is associated with:",o:["Major depression","Schizophrenia","Sleeping disorders","All of the above"],a:[3],e:"All three are listed in the lecture."},
+{c:"n3",s:"Fliyou Test 3",q:"Low melatonin levels typically lead to:",o:["Hyperactivity","Mood disorders","Hypertension","Memory loss"],a:[1],e:"\"Low levels of melatonin will typically give rise to mood disorders.\""},
+
+// ===================== CH4 BRAINSTEM =====================
+{c:"n4",s:"Fliyou Test 1",q:"What landmark is defined by the angle between the lower border of the pons and the upper border of the medulla?",o:["Cerebellopontine angle","Pontomedullary junction","Substantia nigra","Cruciform sulcus"],a:[1],e:"VI, VII and VIII emerge here."},
+{c:"n4",s:"Fliyou Test 2",q:"The angle formed at the junction of pons, medulla and cerebellum is the:",o:["Cerebellopontine angle","Pontomedullary junction","Medullocerebellar angle","Pontocerebellar junction"],a:[0],e:"VII and VIII emerge at the cerebellopontine angle."},
+{c:"n4",s:"Fliyou Test 1",q:"Which nerve originates from the lateral aspect of the mid-pons?",o:["Trigeminal (V)","Abducens (VI)","Facial (VII)","Vestibulocochlear (VIII)"],a:[0],e:"V = lateral mid-pons; VI–VII–VIII at the pontomedullary groove."},
+{c:"n4",s:"Fliyou Test 3",q:"Which nerve arises from the cerebellopontine angle, the more lateral aspect of the pontomedullary junction?",o:["Trigeminal (V)","Abducens (VI)","Facial (VII)","Vestibulocochlear (VIII)"],a:[2],e:"The lecture assigns VII to the cerebellopontine angle, with VIII just lateral to it."},
+{c:"n4",s:"Fliyou Test 1",q:"The two cerebral peduncles are separated (anteriorly, in the midline) by:",o:["Substantia nigra","Tegmentum","Interpeduncular fossa","Crus cerebri"],a:[2],e:"Lecture: the peduncles are separated anteriorly by the interpeduncular fossa, where CN III exits. (The original key said A: the substantia nigra separates each peduncle from the tegmentum, not the two peduncles from each other.)"},
+{c:"n4",s:"Fliyou Test 3",q:"Which nerve exits between the cerebral peduncles?",o:["Trochlear (IV)","Oculomotor (III)","Abducens (VI)","Vestibulocochlear (VIII)"],a:[1],e:"III leaves through the interpeduncular fossa; IV is the only dorsal nerve."},
+{c:"n4",s:"Fliyou Test 1",q:"Which part of the brainstem is joined to the cerebellum by the middle cerebellar peduncles?",o:["Midbrain","Pons","Medulla oblongata","Tectum"],a:[1],e:"Superior–midbrain, middle–pons, inferior–medulla."},
+{c:"n4",s:"Fliyou Test 2",q:"Which nerve emerges from the sulcus between the pyramid and the olive?",o:["Hypoglossal (XII)","Glossopharyngeal (IX)","Vagus (X)","Accessory (XI)"],a:[0],e:"IX, X, XI emerge behind the olive."},
+{c:"n4",s:"Fliyou Test 2",q:"Which vessel provides the major blood supply to the brainstem/midbrain?",o:["Anterior cerebral artery","Middle cerebral artery","Posterior cerebral artery","Basilar artery"],a:[3],e:"\"The brainstem receives its supply from the basilar artery and its branches\" (the PCA is one of these branches)."},
+{c:"n4",s:"Fliyou Test 3",q:"What is the significance of an alternating syndrome?",o:["Identifies the level of the lesion","Motor coordination","Visual perception","Sensory processing"],a:[0],e:"Cranial nerve palsy on one side + contralateral hemiplegia → the nerve tells the level."},
+{c:"n4",s:"Fliyou Test 3",q:"Which part of the brainstem is marked by the crus cerebri and the tegmentum?",o:["Pons","Midbrain","Medulla oblongata","Tectum"],a:[1],e:"The cerebral peduncles (crus + tegmentum) belong to the midbrain."},
+{c:"n4",s:"Fliyou Test 3",q:"What forms the floor of the fourth ventricle?",o:["Rhomboid fossa","Medial eminence","Facial colliculus","Stria medullaris"],a:[0],e:"Diamond-shaped dorsal surface of pons and upper medulla; B–D are landmarks ON the floor."},
+{c:"n4",s:"Fliyou Test 2",q:"What is the primary function of the ascending tracts?",o:["Motor coordination","Transmitting sensory information to the cerebral cortex","Controlling involuntary movements","Regulating autonomic functions"],a:[1],e:"Ascending = sensory; descending = motor."},
+{c:"n4",s:"Fliyou Test 2",q:"Which modalities are carried by the dorsal column–medial lemniscus pathway?",o:["Pain and temperature","Crude touch and pressure","Fine touch, vibration and proprioception","Auditory sensations"],a:[2],e:"Pain/temperature/crude touch = spinothalamic (anterolateral) system."},
+{c:"n4",s:"Fliyou Test 1",q:"Which of these is carried by the (lateral) spinothalamic tract?",o:["Crude touch","Pressure","Pain","Vibration"],a:[2],e:"Spinothalamic = pain and temperature (+ crude touch in the anterolateral system); vibration = dorsal columns."},
+{c:"n4",s:"Fliyou Test 3",q:"Which of the following are CONSCIOUS tracts carrying sensation to the cortex?",o:["Posterior spinocerebellar tract","Anterior spinothalamic tract","Lateral spinothalamic tract","Cuneocerebellar tract"],a:[1,2],e:"Conscious = DCML + anterolateral (spinothalamic) system. Spinocerebellar tracts are UNconscious. (The original key \"AD\" was wrong.)"},
+{c:"n4",s:"Fliyou Test 1",q:"What is the function of the spinocerebellar tracts?",o:["Transmitting unconscious sensations","Coordinating and refining motor movements","Regulating autonomic functions","Controlling voluntary contraction"],a:[0],e:"They are the unconscious ascending tracts."},
+{c:"n4",s:"Fliyou Test 2",q:"What type of information do the spinocerebellar tracts carry?",o:["Conscious sensations","Fine touch and vibration","Unconscious proprioceptive information","Auditory and visual sensations"],a:[2],e:"Unconscious proprioception to the cerebellum."},
+{c:"n4",s:"CC ANAT3 2025–26",q:"Concerning the morphology of the brainstem:",o:["The trigeminal nerve emerges from the anterior surface of the mesencephalon","The medulla rests on the lesser wing of the sphenoid","The posterior surface of the pons faces the 4th ventricle","The tectal plate is made of the quadrigeminal tubercles (colliculi)"],a:[2,3],e:"V emerges from the pons; the brainstem lies on the clivus (occipital bone)."},
+{c:"n4",s:"CC ANAT3 2025–26",q:"About the cranial nerves:",o:["The abducens nerve (VI) emerges from the anterior collateral sulcus of the spinal cord","The trigeminal nerve emerges from the anterior surface of the pons","The facial nerve is a purely sensory nerve","The nucleus of the hypoglossal nerve lies in the medulla"],a:[1,3],e:"VI emerges at the pontomedullary groove; VII is mixed. XII belongs to the medulla."},
+{c:"n4",s:"CC ANAT3 2025–26",q:"Concerning the brainstem:",o:["Ontogenetically, the brainstem derives from the prosencephalon","It contains ten of the twelve cranial-nerve nuclei","Topographically it lies between the diencephalon above and the spinal cord below","It is lodged at the superior orbital fissure"],a:[1,2],e:"Brainstem = mesencephalon + metencephalon + myelencephalon; it lies in the posterior fossa on the clivus."},
+{c:"n4",s:"CC ANAT3 2025–26",q:"Topographical features of the brainstem:",o:["The brainstem is related to the tentorium cerebelli","The mesencephalon is related to the foramen of Pacchioni","The brainstem lies in front of the dorsum of the sella turcica","The pons straddles the supra- and infratentorial levels"],a:[0,1],e:"It lies under the tentorium, on the clivus (behind the sella). The MIDBRAIN — not the pons — passes through the tentorial notch."},
+{c:"n4",s:"CC ANAT3 2025–26",q:"Concerning the systematisation of the brainstem:",o:["It is intimately related to the superior longitudinal sinus","It comprises, among others, the pons and the mesencephalon","It secretes oxytocin","It is the superposition of three levels"],a:[1,3],e:"Midbrain, pons, medulla = three superimposed levels."},
+{c:"n4",s:"CC ANAT3 2025–26",q:"Morphological features of the brainstem:",o:["The superior colliculi play a role in hearing","The medullary striae of the 4th ventricle lie on the anterior surface of the medulla","The pons continues laterally as the middle cerebellar peduncles","The trochlear nerve emerges from the posterior surface of the mesencephalon"],a:[2,3],e:"Superior colliculi = vision (inferior = hearing). The striae lie on the FLOOR of the 4th ventricle (posterior)."},
+
+// ===================== CH5 CEREBELLUM =====================
+{c:"n5",s:"Fliyou Test 1",q:"What is the primary function of the vestibulocerebellum?",o:["Coordination of voluntary muscle movements","Planning and timing of movements","Vestibular reflexes and postural maintenance","Cognitive functions"],a:[2],e:"Flocculonodular lobe: balance, vestibular reflexes, eye movements."},
+{c:"n5",s:"Fliyou Test 1",q:"Which part of the cerebellum integrates sensory input with motor commands for adaptive motor coordination?",o:["Vestibulocerebellum","Spinocerebellum","Cerebrocerebellum","Flocculonodular lobe"],a:[1],e:"Spinocerebellum = vermis + intermediate zones."},
+{c:"n5",s:"Fliyou Test 2",q:"What is the function of the spinocerebellum?",o:["Vestibular reflexes","Adaptive motor coordination","Planning and timing of movements","Cognitive functions"],a:[1],e:"Tone, posture, trunk/limb coordination."},
+{c:"n5",s:"Fliyou Test 1",q:"Which cerebellar peduncle connects the cerebellum with the midbrain?",o:["Superior","Middle","Inferior","Lateral/anterior"],a:[0],e:"Middle → pons; inferior → medulla."},
+{c:"n5",s:"Fliyou Test 3",q:"How is the cerebellum connected to the brainstem?",o:["Via cranial nerves","Through spinal-cord tracts","By three pairs of cerebellar peduncles","Direct synaptic connections"],a:[2],e:"Superior, middle, inferior peduncles."},
+{c:"n5",s:"Fliyou Test 2",q:"Which fissure divides the cerebellum into superior and inferior surfaces?",o:["Primary fissure","Posterolateral fissure","Horizontal fissure","Transverse fissure"],a:[2],e:"Horizontal fissure = great circumferential sulcus of Vicq d'Azyr."},
+{c:"n5",s:"Fliyou Test 3",q:"Which part of the cerebellum is phylogenetically the oldest and mainly serves balance and spatial orientation?",o:["Vestibulocerebellum","Spinocerebellum","Cerebrocerebellum","Flocculonodular lobe"],a:[0,3],e:"Both names describe the same part: the flocculonodular lobe (anatomical name) = vestibulocerebellum/archicerebellum (functional name)."},
+{c:"n5",s:"Fliyou Test 3",q:"Damage to the flocculonodular lobe most likely causes:",o:["Gait impairments and leg incoordination","Problems with skilled voluntary movements","Disruption of whole-body movements","Altered walking gait due to loss of equilibrium"],a:[3],e:"A = upper (anterior) part; B = lateral zone; C = midline."},
+{c:"n5",s:"CC ANAT3 2025–26",q:"Concerning the cerebellum:",o:["It is lodged within the tectal plate","It is involved in emotional control","It plays a major role in balance and spatio-temporal coordination","It lies in the anterior cranial fossa"],a:[2],e:"Posterior cranial fossa, behind the brainstem; regulates tone, balance and coordination."},
+
+// ===================== CH6 SPINAL CORD =====================
+{c:"n6",s:"Fliyou Test 1",q:"Which space between arachnoid and pia mater contains CSF?",o:["Epidural space","Subdural space","Subarachnoid space","Intrathecal space"],a:[2],e:"The epidural space contains fat and venous plexus."},
+{c:"n6",s:"Fliyou Test 1",q:"The spinal cord is supplied by branches of which artery, which gives the anterior and posterior spinal arteries?",o:["Carotid","Vertebral","Subclavian","Femoral"],a:[1],e:"Plus radicular arteries from segmental arteries."},
+{c:"n6",s:"Fliyou Test 1",q:"The tapered end of the spinal cord, from which the filum terminale extends, is the:",o:["Cerebellopontine angle","Conus medullaris","Fastigium","Foramen magnum"],a:[1],e:"At L1–L2 in adults."},
+{c:"n6",s:"Fliyou Test 1",q:"Which meningeal layer is the outermost and has periosteal and meningeal layers?",o:["Arachnoid","Pia mater","Dura mater","Subarachnoid mater"],a:[2],e:"From inside out: Pia, Arachnoid, Dura (\"PAD\")."},
+{c:"n6",s:"Fliyou Test 2",q:"What anchors the spinal cord and extends from the conus medullaris to the 1st coccygeal vertebra?",o:["Filum terminale","Conus medullaris","Cauda equina","Anterior median fissure"],a:[0],e:"Thin fibrous thread anchoring the cord."},
+{c:"n6",s:"Fliyou Test 2",q:"Which part of the cord contains the neurons and has a butterfly shape?",o:["Grey matter","White matter","Anterior horn","Posterior horn"],a:[0],e:"Central H-shaped grey matter; white matter is peripheral."},
+{c:"n6",s:"Fliyou Test 3",q:"Apart from conduction, what is a key role of the spinal cord in neural pathways?",o:["Synthesising neurotransmitters","Modifying and integrating information","Producing CSF","Initiating voluntary movement"],a:[1],e:"\"The spinal cord is more than a conduit: it modifies and integrates the information.\""},
+{c:"n6",s:"Fliyou Test 3",q:"The neurosurgical emergency of localised compression of the cord is called:",o:["Spinal shock","Spinal reflex","Spinal cord compression","Neurogenic shock"],a:[2],e:"Lesional, sublesional and spinal syndromes."},
+{c:"n6",s:"Fliyou Test 3",q:"Which veins accompany the arteries of the spinal cord and drain into the vertebral venous plexus?",o:["Jugular veins","Radicular veins","Hepatic veins","Renal veins"],a:[1],e:"Spinal veins → radicular veins → internal/external vertebral venous plexus."},
+{c:"n6",s:"CC ANAT3 2025–26",q:"About the spinal cord:",o:["It ends at the level of S1 in the adult","It is lodged in the sella turcica","It ends at the L1/L2 intervertebral disc in the adult","It is the caudal segment of the CNS, continuing the brainstem"],a:[2,3],e:"S1 = 6-month fetus; L3 = birth; L1/L2 = adult."},
+{c:"n6",s:"CC ANAT3 2025–26",q:"Concerning the morphology of the spinal cord:",o:["The cervical enlargement extends from C4 to T1","The spinal cord is brownish","The conus medullaris generally lies at the L2 vertebra in the adult","The cervical enlargement gives the nerves of the lumbar plexus"],a:[0],e:"Cervical enlargement C4–T1 (upper limbs → brachial plexus); conus at L1–L2."},
+{c:"n6",s:"CC ANAT3 2025–26",q:"Concerning the relations of the spinal cord:",o:["It is centred by a cavity called the 4th ventricle","Its means of attachment include the denticulate ligament","It sends nerve rootlets through the foramen rotundum","It is related in front to the vertebral bodies and discs, through the posterior longitudinal ligament"],a:[1,3],e:"The cord's cavity is the central canal; nerves leave through the intervertebral foramina."},
+{c:"n6",s:"CC ANAT3 2025–26",q:"Morphological characteristics of the spinal cord:",o:["It is not wrapped by the arachnoid","It is parallelepiped-shaped","It comprises, among others, 8 cervical segments (myelomeres)","It has a cervical and a lumbar enlargement"],a:[2,3],e:"Cylindrical, flattened AP; wrapped by dura, arachnoid, pia; 8 cervical segments."},
+
+// ===================== CH7 THYROID =====================
+{c:"e1",s:"Hajjij Exam 2022",q:"The thyroid gland is:",o:["Paired and median","Secretes parathyroid hormones","Unpaired","Located in the infrahyoid region","Located in the suprahyoid region"],a:[2,3],e:"A unique (unpaired) median gland of the infrahyoid neck."},
+{c:"e1",s:"Hajjij Exam 2021",q:"The thyroid gland:",o:["Lies in the submandibular region","Lies in the suprahyoid region","Lies in the lateral infrahyoid region","Lies in the median infrahyoid region","Is an unpaired exocrine gland"],a:[3],e:"Median infrahyoid; it is ENDOcrine."},
+{c:"e1",s:"Hajjij Resit 2021",q:"The thyroid gland:",o:["Is an exocrine gland","Is median and unpaired","Lies in the infrahyoid region","Secretes parathormone"],a:[1,2],e:"PTH comes from the parathyroids; the thyroid secretes thyroid hormones and calcitonin."},
+{c:"e1",s:"Hajjij Exam 2021",q:"The thyroid gland presents:",o:["One lobe","Two lobes","One isthmus","Two isthmuses","An inconstant INFERIOR extension"],a:[1,2],e:"The inconstant extension (pyramidal lobe) rises from the UPPER border of the isthmus."},
+{c:"e1",s:"Hajjij Exam 2021",q:"The thyroid lodge:",o:["Is limited by the thyroid sheath","The thyroid capsule adheres to the sheath and cannot be separated from it","It is covered in front by the suprahyoid muscles and their fasciae","It is covered in front by the infrahyoid muscles and their fasciae"],a:[0,3],e:"A cleavage plane (thyroid space) exists between gland and lodge — the basis of thyroid surgery."},
+{c:"e1",s:"Hajjij Exam 2021",q:"Relations of the lateral lobes of the thyroid:",o:["The medial face relates in front to the pharynx then the oesophagus","The medial face relates in front to the laryngotracheal axis","The posterior face of the lobes relates to the parathyroid glands","The right inferior laryngeal nerve arises below the aortic arch","The left inferior laryngeal nerve passes in front of the branches of the inferior thyroid artery"],a:[1,2],e:"Pharynx/oesophagus are BEHIND. The LEFT nerve arises below the arch and passes BEHIND the inferior thyroid artery branches."},
+{c:"e1",s:"Hajjij Resit 2021",q:"Relations of the medial face of the thyroid lobes include:",o:["The thyroid cartilage","The hyoid bone","The trachea"],a:[0,2],e:"Top → bottom: posterior-inferior thyroid cartilage, cricoid, first 5–6 tracheal rings."},
+{c:"e1",s:"Hajjij Exam 2023",q:"The most important POSTERIOR relations in thyroid surgery are:",o:["The infrahyoid muscles","The inferior laryngeal (recurrent) nerve","The internal jugular vein","The parathyroid glands","The common carotid artery"],a:[1,3],e:"Recurrent nerves and parathyroids = the major risks of thyroidectomy. The infrahyoid muscles are anterior."},
+{c:"e1",s:"Hajjij Resit 2021",q:"The recurrent nerve, an important relation of the thyroid:",o:["Is a branch of the glossopharyngeal nerve (IX)","Runs in the tracheo-oesophageal angle","The right recurrent nerve arises in the mediastinum","The left recurrent nerve arises in the mediastinum","Gives sensation to the subglottic mucosa of the larynx"],a:[1,3,4],e:"Branch of the vagus (X). Right = base of neck (subclavian); left = thorax (below the aortic arch)."},
+{c:"e1",s:"Hajjij Exam 2019",q:"The recurrent nerve, an important relation of the thyroid:",o:["Is exclusively motor","Runs between the trachea and the posterior face of the gland","Both recurrent nerves have a mediastinal course","Both nerves have the same termination"],a:[1,3],e:"It is also sensory (subglottis). Only the LEFT has a mediastinal course. Both end by passing under the inferior pharyngeal constrictor."},
+{c:"e1",s:"Hajjij Midterm 2024",q:"Thyroid vascularisation:",o:["The middle thyroid vein drains directly into the IJV","The superior thyroid artery and vein form the (only true) superior pedicle","The inferior thyroid vein is satellite of the inferior thyroid artery","The superior thyroid artery is the 1st branch of the external carotid and divides into three branches"],a:[0,1,3],e:"The inferior thyroid veins are NOT satellite of the artery. D is stated word for word in your lecture (the 2024 key had only A and B)."},
+
+// ===================== CH8 EAR PART 1 =====================
+{c:"e2",s:"Hajjij Exam 2023",q:"The external auditory canal (tick the correct answers):",o:["Is lined by an extension of the skin of the auricle","Its MEDIAL part contains the ceruminous glands, where wax plugs form","It presents a narrowing called the isthmus","It extends from the depth of the concha/tragus to the tympanic membrane","It is fibro-cartilaginous in its outer 2/3"],a:[0,2,3],e:"Glands and cartilage are in the OUTER 1/3; the inner 2/3 is bony."},
+{c:"e2",s:"Hajjij Exam 2023",q:"Tick the FALSE statement about the tympanic cavity:",o:["The posterior wall presents the aditus ad antrum, joining the cavity to the mastoid antrum","The inferior wall relates to the internal jugular vein (jugular bulb)","The anterior wall presents the orifice of the auditory tube","The superior wall is formed by the tegmen tympani","The medial wall is also called the mastoid wall"],a:[4],e:"Medial wall = labyrinthine wall. The POSTERIOR wall is the mastoid wall."},
+{c:"e2",s:"Hajjij Exam 2022",q:"Tick the correct statements about the tympanic cavity:",o:["The superior wall relates to the meninges of the middle cranial fossa","The inferior wall presents the orifice of the auditory tube","The anterior wall relates to the internal jugular vein","The inferior wall is also called the jugular wall","The anterior wall is also called the carotid wall"],a:[0,3,4],e:"Auditory-tube orifice = anterior wall; IJV bulb = floor."},
+{c:"e2",s:"Hajjij Midterm 2024",q:"The tympanic cavity is bounded by walls:",o:["The tegmen tympani is the superior wall","The anterior wall is the mastoid bone/cells","The lateral wall is the eardrum (tympanic membrane)","The medial wall opens to the outer and middle ear"],a:[0,2],e:"Mastoid = POSTERIOR wall; medial wall faces the inner ear."},
+{c:"e2",s:"Hajjij Resit 2021",q:"The tympanic cavity:",o:["Its lateral wall is the tympanic membrane","Its medial wall connects the external and middle ear","Its internal wall relates to the tegmen tympani","Its anterior wall relates to the mastoid","Its anterior wall relates to the Eustachian tube"],a:[0,4],e:"Tegmen = roof; mastoid = posterior wall."},
+{c:"e2",s:"Hajjij Exam 2023",q:"The medial (internal) wall of the tympanic cavity relates to:",o:["The mastoid","The Eustachian tube","The oval window","The promontory","The 2nd (tympanic) portion of the facial canal"],a:[2,3,4],e:"Medial wall: facial-canal prominence, lateral SCC prominence, promontory, oval and round windows."},
+{c:"e2",s:"Hajjij Exam 2022",q:"The pars tensa:",o:["Is the upper part of the eardrum","Is the lower (main) part of the eardrum","Has 3 layers","Has 2 layers","Has a fibrous layer"],a:[1,2,4],e:"Pars flaccida is the small upper part; pars tensa has cuticular, fibrous and mucosal layers."},
+{c:"e2",s:"Hajjij Exam 2019",q:"The three layers of the tympanic membrane are:",o:["An outer cutaneous (cuticular) layer","An inner cutaneous layer","An inner mucosal layer","An inner fibrous layer"],a:[0,2],e:"Lateral → medial: cuticular, fibrous (MIDDLE), mucosal."},
+{c:"e2",s:"Hajjij Exam 2023",q:"The ossicular chain presents the following joints:",o:["Incudo-malleolar","Malleo-stapedial","Stapedo-malleolar","Incudo-stapedial","Tympano-stapedial"],a:[0,3],e:"Malleus–incus–stapes in a row: the malleus never touches the stapes."},
+{c:"e2",s:"Hajjij Midterm 2024",q:"Joints of the ossicles of the middle ear:",o:["Incudomalleolar joint","Stapediomalleolar joint","Incudostapedial joint","Malleostapedial joint"],a:[0,2],e:"\"MIS\": Malleus–Incus, Incus–Stapes."},
+{c:"e2",s:"Hajjij Resit 2021",q:"The incudo-stapedial joint:",o:["Is formed by the incus and the stapes","Is formed by the stapes and the malleus","Is formed by the malleus and the incus","Is the closest to the eardrum","Is the only joint of the ear"],a:[0],e:"The incudomalleolar joint is closer to the eardrum."},
+{c:"e2",s:"Hajjij Midterm 2024",q:"The auditory tube:",o:["Is also called the Eustachian tube","Is a cartilaginous tube","Is a fibro-cartilaginous tube","Is an osteo-cartilaginous tube"],a:[0,3],e:"Posterosuperior bony part + anterior cartilaginous part."},
+{c:"e2",s:"Hajjij Exam 2022",q:"The auditory tube:",o:["Is a fibro-cartilaginous canal","Is an osteo-cartilaginous canal","Is the Eustachian tube","Opens with each swallowing movement","Joins the POSTERIOR wall of the tympanic cavity to the nasopharynx"],a:[1,2,3],e:"It opens on the ANTERIOR wall."},
+
+// ===================== CH9 EAR PART 2 =====================
+{c:"e3",s:"Hajjij Midterm 2024",q:"Correct statement(s) about the labyrinth:",o:["From inside the membranous labyrinth outward, there are 2 liquids: endolymph and perilymph","From inside outward there are 3 liquids: endolymph, perilymph and CSF","The inner ear is filled mostly with air","The bony labyrinth houses the membranous labyrinth"],a:[0,3],e:"Endolymph inside the membranous labyrinth; perilymph between it and the bone."},
+{c:"e3",s:"Hajjij Exam 2023",q:"Correct statement(s) about the labyrinth:",o:["From inside outward there are 3 liquids: CSF, endolymph and perilymph","From inside outward there are 2 liquids: endolymph and perilymph","The bony labyrinth houses the membranous labyrinth","The inner ear contains no liquid","The membranous labyrinth is made of the cochlear duct, the semicircular ducts and the utricle"],a:[1,2],e:"E is incomplete: the SACCULE is missing."},
+{c:"e3",s:"Hajjij Exam 2021",q:"The posterior membranous labyrinth:",o:["Is meant for hearing","Comprises the utricle, the saccule and the semicircular ducts","Contains perilymph"],a:[1],e:"Posterior = balance; the membranous labyrinth contains ENDOlymph."},
+{c:"e3",s:"Hajjij Exam 2022",q:"The membranous semicircular canals (ducts):",o:["Communicate directly with the saccule","Are part of the balance apparatus with the utricle and saccule","Detect (angular) movements of the head","Play an important role in hearing","Are coiled in 2.5 turns"],a:[1,2],e:"They open into the UTRICLE (5 openings). 2.5 turns describes the cochlea."},
+{c:"e3",s:"Hajjij Exam 2022",q:"The membranous cochlea (cochlear duct):",o:["Is a tube coiled in 2 turns","Lines (doubles) the bony cochlea","Houses the organ of Corti","Is made of 2 vesicles","Is filled with perilymph"],a:[1,2],e:"2½–2¾ turns; filled with ENDOlymph; utricle and saccule are the vesicles of the vestibule."},
+
+// ===================== CH10 LARYNX =====================
+{c:"e4",s:"Hajjij Midterm 2024",q:"Functions of the larynx:",o:["Deglutition","Digestion","Breathing","Phonation"],a:[0,2,3],e:"Phonation, respiration, protection, deglutition."},
+{c:"e4",s:"Hajjij Exam 2022",q:"The larynx:",o:["Lies in the visceral compartment of the neck","Lies only partially in the neck","Lies entirely in the neck and continues below with the oesophagus","Lies entirely in the neck and continues below with the trachea","Lies in the vascular compartment of the neck"],a:[0,3],e:"Middle part of the visceral sheath; continues with the trachea (the hypopharynx is behind)."},
+{c:"e4",s:"Hajjij Exam 2021",q:"The larynx:",o:["Lies in the posterior part of the visceral sheath of the neck","Extends from C1 to C6","Extends from C4 to C6","Its average length is 4.5 cm in men","Is a pyramid with an inferior base"],a:[2,3],e:"Middle of the visceral sheath; triangular pyramid with a SUPERIOR (posterosuperior) base and lower apex."},
+{c:"e4",s:"Hajjij Exam 2022",q:"The larynx is made of cartilages:",o:["Joined by joints and ligaments only","Joined by ligaments only","Joined by membranes and joints only","Joined by joints, ligaments and membranes","All answers are correct"],a:[3],e:"Fibro-musculo-cartilaginous: cartilages + joints + ligaments + membranes + muscles."},
+{c:"e4",s:"Hajjij Resit 2021",q:"The larynx is composed of:",o:["Bones joined by joints","No ligaments","Cartilages joined by joints","Several ligaments and membranes"],a:[2,3],e:"The hyoid is a separate structure; the larynx has no bones."},
+{c:"e4",s:"Hajjij Exam 2023",q:"Which cartilages belong to the larynx?",o:["Thyroid cartilage","Septal cartilage","Cricoid cartilage","Cuneiform cartilage","Epiglottic cartilage"],a:[0,2,3,4],e:"The septal cartilage belongs to the nose."},
+{c:"e4",s:"Hajjij Exam 2021",q:"Which elements are part of the larynx?",o:["The cricoid cartilage","The thyroid cartilage","The hyoid bone"],a:[0,1],e:"The hyoid is closely associated but considered a separate structure."},
+{c:"e4",s:"Hajjij Resit 2021",q:"The epiglottic cartilage:",o:["Is unpaired and median","Sits on the upper border of the cricoid lamina","Its base has 2 processes","Inserts into the re-entrant angle of the thyroid cartilage"],a:[0,3],e:"Its foot inserts on the thyroid angle (thyroepiglottic ligament). C describes the arytenoid base."},
+{c:"e4",s:"Hajjij Exam 2022",q:"The arytenoid cartilages:",o:["Are shaped like a triangular pyramid","Lie above the superior horns of the thyroid cartilage","Their base has an ANTERIOR muscular process and a POSTERIOR vocal process"],a:[0],e:"They sit on the cricoid lamina; the vocal process is anterior, the muscular process lateral."},
+{c:"e4",s:"Hajjij Exam 2021",q:"The arytenoid cartilages:",o:["Articulate with the epiglottis","Articulate with the thyroid cartilage","Articulate with the cricoid cartilage","The anterior angle of the base presents the muscular process"],a:[2],e:"Anterior angle = vocal process; lateral angle = muscular process."},
+{c:"e4",s:"Hajjij Midterm 2024",q:"The arytenoid cartilage articulates through the:",o:["Thyro-arytenoid joint","Hyo-arytenoid joint","Epiglotto-arytenoid joint","Crico-arytenoid joint"],a:[3],e:"(The circulated key said A — wrong: the arytenoid base articulates with the cricoid lamina.)"},
+{c:"e4",s:"Hajjij Exam 2023",q:"Which TWO joints belong to the larynx?",o:["Crico-thyroid","Crico-hyoid","Crico-epiglottic","Crico-arytenoid","Thyro-arytenoid"],a:[0,3],e:"Crico-arytenoid (open/close the glottis) and crico-thyroid (tension)."},
+{c:"e4",s:"Hajjij Exam 2022",q:"The crico-thyroid joints:",o:["Are two in number","Tilt the cricoid relative to the thyroid cartilage","Tilt the cricoid relative to the arytenoid","Allow tension of the vocal cords","Allow vibration of the vocal cords"],a:[0,1,3],e:"Vibration comes from the subglottic pressure acting on the closed cords."},
+{c:"e4",s:"Hajjij Midterm 2024",q:"The only intrinsic muscle NOT supplied by the recurrent laryngeal nerve is the:",o:["Cricothyroid","Lateral crico-arytenoid","Superior & inferior thyro-arytenoid","Arytenoid (interarytenoid)"],a:[0],e:"Cricothyroid = external branch of the superior laryngeal nerve."},
+{c:"e4",s:"Hajjij Exam 2021",q:"Which muscles are CONSTRICTORS of the glottis?",o:["Crico-thyroid","Inter-arytenoid","\"Superior thyro-hyoid\"","Posterior crico-arytenoid"],a:[1],e:"Crico-thyroid = tensor; PCA = the only dilator."},
+{c:"e4",s:"Hajjij Resit 2021",q:"The extrinsic muscles of the larynx:",o:["All insert on laryngeal elements","Do not all insert on laryngeal elements","Act during swallowing (mobility/protection)","Are purely phonatory"],a:[1,2],e:"They join the larynx to hyoid/sternum/mandible and move it during swallowing."}
+];
+
+const CH = [
+ {id:"n1",part:"I",num:1,t:"Introduction & Embryology of the CNS"},
+ {id:"n2",part:"I",num:2,t:"The Cerebrum"},
+ {id:"n3",part:"I",num:3,t:"The Diencephalon"},
+ {id:"n4",part:"I",num:4,t:"The Brainstem"},
+ {id:"n5",part:"I",num:5,t:"The Cerebellum"},
+ {id:"n6",part:"I",num:6,t:"The Spinal Cord"},
+ {id:"e1",part:"II",num:7,t:"The Thyroid Gland"},
+ {id:"e2",part:"II",num:8,t:"The Ear — Part 1"},
+ {id:"e3",part:"II",num:9,t:"The Ear — Part 2"},
+ {id:"e4",part:"II",num:10,t:"The Larynx"}
+];
+
+const PG={"0": 6, "1": 6, "2": 12, "3": 12, "4": 12, "5": 14, "6": 13, "7": 13, "8": 13, "9": 14, "10": 14, "11": 14, "12": 16, "13": 15, "14": 16, "15": 16, "16": 16, "17": 15, "18": 16, "19": 13, "20": 15, "21": 15, "22": 15, "23": 15, "24": 15, "25": 15, "26": 15, "27": 15, "28": 20, "29": 24, "30": 22, "31": 21, "32": 21, "33": 21, "34": 21, "35": 22, "36": 22, "37": 20, "38": 21, "39": 22, "40": 22, "41": 22, "42": 22, "43": 27, "44": 27, "45": 27, "46": 27, "47": 27, "48": 27, "49": 27, "50": 28, "51": 27, "52": 29, "53": 27, "54": 28, "55": 28, "56": 28, "57": 28, "58": 28, "59": 28, "60": 28, "61": 31, "62": 27, "63": 26, "64": 27, "65": 26, "66": 27, "67": 35, "68": 35, "69": 35, "70": 33, "71": 32, "72": 33, "73": 33, "74": 35, "75": 32, "76": 40, "77": 41, "78": 39, "79": 40, "80": 39, "81": 40, "82": 41, "83": 41, "84": 41, "85": 39, "86": 39, "87": 40, "88": 39, "89": 45, "90": 45, "91": 45, "92": 46, "93": 47, "94": 47, "95": 47, "96": 45, "97": 48, "98": 48, "99": 49, "100": 54, "101": 55, "102": 55, "103": 55, "104": 55, "105": 55, "106": 56, "107": 56, "108": 53, "109": 53, "110": 53, "111": 57, "112": 57, "113": 61, "114": 61, "115": 63, "116": 63, "117": 61, "118": 69, "119": 69, "120": 69, "121": 69, "122": 69, "123": 70, "124": 70, "125": 71, "126": 71, "127": 71, "128": 71, "129": 71, "130": 71, "131": 71, "132": 71, "133": 72};
+const OG={"0": ["Cc ANAT3 2025-2026.pdf", 1], "1": ["Cc ANAT3 2025-2026.pdf", 2], "2": ["Anatomy Fliyou Test 1.pdf", 1], "3": ["Anatomy Fliyou Test 1.pdf", 1], "4": ["Anatomy Fliyou Test 1.pdf", 1], "5": ["Anatomy Fliyou Test 1.pdf", 1], "6": ["Anatomy Fliyou Test 1.pdf", 1], "7": ["Anatomy Fliyou Test 3.pdf", 1], "8": ["Anatomy Fliyou Test 2.pdf", 1], "9": ["Anatomy Fliyou Test 2.pdf", 1], "10": ["Anatomy Fliyou Test 3.pdf", 1], "11": ["Anatomy Fliyou Test 2.pdf", 1], "12": ["Anatomy Fliyou Test 2.pdf", 1], "13": ["Anatomy Fliyou Test 1.pdf", 4], "14": ["Anatomy Fliyou Test 1.pdf", 4], "15": ["Anatomy Fliyou Test 3.pdf", 1], "16": ["Anatomy Fliyou Test 3.pdf", 1], "17": ["Anatomy Fliyou Test 1.pdf", 5], "18": ["Anatomy Fliyou Test 3.pdf", 5], "19": ["Anatomy Fliyou Test 1.pdf", 5], "20": ["Anatomy Fliyou Test 1.pdf", 5], "21": ["Anatomy Fliyou Test 1.pdf", 5], "22": ["Anatomy Fliyou Test 1.pdf", 6], "23": ["Anatomy Fliyou Test 2.pdf", 5], "24": ["Anatomy Fliyou Test 2.pdf", 5], "25": ["Anatomy Fliyou Test 3.pdf", 4], "26": ["Anatomy Fliyou Test 2.pdf", 5], "27": ["Cc ANAT3 2025-2026.pdf", 7], "28": ["Anatomy Fliyou Test 1.pdf", 6], "29": ["Anatomy Fliyou Test 1.pdf", 7], "30": ["Anatomy Fliyou Test 1.pdf", 7], "31": ["Anatomy Fliyou Test 1.pdf", 7], "32": ["Anatomy Fliyou Test 1.pdf", 7], "33": ["Anatomy Fliyou Test 2.pdf", 6], "34": ["Anatomy Fliyou Test 2.pdf", 6], "35": ["Anatomy Fliyou Test 2.pdf", 6], "36": ["Anatomy Fliyou Test 2.pdf", 7], "37": ["Anatomy Fliyou Test 2.pdf", 5], "38": ["Anatomy Fliyou Test 3.pdf", 6], "39": ["Anatomy Fliyou Test 3.pdf", 6], "40": ["Anatomy Fliyou Test 3.pdf", 6], "41": ["Anatomy Fliyou Test 3.pdf", 6], "42": ["Anatomy Fliyou Test 3.pdf", 6], "43": ["Anatomy Fliyou Test 1.pdf", 2], "44": ["Anatomy Fliyou Test 2.pdf", 2], "45": ["Anatomy Fliyou Test 1.pdf", 2], "46": ["Anatomy Fliyou Test 3.pdf", 2], "47": ["Anatomy Fliyou Test 1.pdf", 2], "48": ["Anatomy Fliyou Test 3.pdf", 2], "49": ["Anatomy Fliyou Test 1.pdf", 2], "50": ["Anatomy Fliyou Test 2.pdf", 2], "51": ["Anatomy Fliyou Test 2.pdf", 2], "52": ["Anatomy Fliyou Test 3.pdf", 2], "53": ["Anatomy Fliyou Test 3.pdf", 2], "54": ["Anatomy Fliyou Test 3.pdf", 2], "55": ["Anatomy Fliyou Test 2.pdf", 3], "56": ["Anatomy Fliyou Test 2.pdf", 3], "57": ["Anatomy Fliyou Test 1.pdf", 3], "58": ["Anatomy Fliyou Test 3.pdf", 3], "59": ["Anatomy Fliyou Test 1.pdf", 3], "60": ["Anatomy Fliyou Test 2.pdf", 2], "61": ["Cc ANAT3 2025-2026.pdf", 3], "62": ["Cc ANAT3 2025-2026.pdf", 3], "63": ["Cc ANAT3 2025-2026.pdf", 4], "64": ["Cc ANAT3 2025-2026.pdf", 6], "65": ["Cc ANAT3 2025-2026.pdf", 8], "66": ["Cc ANAT3 2025-2026.pdf", 13], "67": ["Anatomy Fliyou Test 1.pdf", 1], "68": ["Anatomy Fliyou Test 1.pdf", 1], "69": ["Anatomy Fliyou Test 2.pdf", 1], "70": ["Anatomy Fliyou Test 1.pdf", 2], "71": ["Anatomy Fliyou Test 3.pdf", 1], "72": ["Anatomy Fliyou Test 2.pdf", 1], "73": ["Anatomy Fliyou Test 3.pdf", 1], "74": ["Anatomy Fliyou Test 3.pdf", 1], "75": ["Cc ANAT3 2025-2026.pdf", 10], "76": ["Anatomy Fliyou Test 1.pdf", 2], "77": ["Anatomy Fliyou Test 1.pdf", 2], "78": ["Anatomy Fliyou Test 1.pdf", 3], "79": ["Anatomy Fliyou Test 1.pdf", 3], "80": ["Anatomy Fliyou Test 2.pdf", 2], "81": ["Anatomy Fliyou Test 2.pdf", 2], "82": ["Anatomy Fliyou Test 3.pdf", 2], "83": ["Anatomy Fliyou Test 3.pdf", 3], "84": ["Anatomy Fliyou Test 3.pdf", 3], "85": ["Cc ANAT3 2025-2026.pdf", 5], "86": ["Cc ANAT3 2025-2026.pdf", 5], "87": ["Cc ANAT3 2025-2026.pdf", 8], "88": ["Cc ANAT3 2025-2026.pdf", 10], "89": ["anatprovqcms.pdf", 71], "90": ["anatprovqcms.pdf", 80], "91": ["anatprovqcms.pdf", 91], "92": ["anatprovqcms.pdf", 80], "93": ["anatprovqcms.pdf", 80], "94": ["anatprovqcms.pdf", 80], "95": ["anatprovqcms.pdf", 92], "96": ["ANATOMIRE 4 .pdf", 3], "97": ["anatprovqcms.pdf", 91], "98": ["anatprovqcms.pdf", 104], "99": ["Prof Hajijs Midterm (2024).pdf", 2], "100": ["ANATOMIRE 4 .pdf", 1], "101": ["ANATOMIRE 4 .pdf", 1], "102": ["anatprovqcms.pdf", 73], "103": ["Prof Hajijs Midterm (2024).pdf", 2], "104": ["anatprovqcms.pdf", 94], "105": ["ANATOMIRE 4 .pdf", 1], "106": ["anatprovqcms.pdf", 73], "107": ["anatprovqcms.pdf", 103], "108": ["ANATOMIRE 4 .pdf", 1], "109": ["Prof Hajijs Midterm (2024).pdf", 1], "110": ["anatprovqcms.pdf", 94], "111": ["Prof Hajijs Midterm (2024).pdf", 1], "112": ["anatprovqcms.pdf", 73], "113": ["Prof Hajijs Midterm (2024).pdf", 1], "114": ["ANATOMIRE 4 .pdf", 1], "115": ["anatprovqcms.pdf", 83], "116": ["anatprovqcms.pdf", 73], "117": ["anatprovqcms.pdf", 73], "118": ["Prof Hajijs Midterm (2024).pdf", 2], "119": ["anatprovqcms.pdf", 72], "120": ["anatprovqcms.pdf", 81], "121": ["anatprovqcms.pdf", 72], "122": ["anatprovqcms.pdf", 92], "123": ["ANATOMIRE 4 .pdf", 3], "124": ["anatprovqcms.pdf", 81], "125": ["anatprovqcms.pdf", 92], "126": ["anatprovqcms.pdf", 72], "127": ["anatprovqcms.pdf", 81], "128": ["Prof Hajijs Midterm (2024).pdf", 2], "129": ["ANATOMIRE 4 .pdf", 3], "130": ["anatprovqcms.pdf", 73], "131": ["Prof Hajijs Midterm (2024).pdf", 2], "132": ["anatprovqcms.pdf", 81], "133": ["anatprovqcms.pdf", 92]};
+</script>
+<script>
+const L="ABCDE";let state={};try{state=JSON.parse(localStorage.getItem("mcq-state")||"{}")}catch(e){state={}}
+const save=()=>{try{localStorage.setItem("mcq-state",JSON.stringify(state))}catch(e){}};
+Q.forEach((q,i)=>q.id=i);
+const byCh=id=>Q.filter(q=>q.c===id);
+const part=id=>id[0]==="n"?"neuro":"ent";
+function chStats(id){const qs=byCh(id);let d=0,ok=0;qs.forEach(q=>{const s=state[q.id];if(s&&s.done){d++;if(s.ok)ok++}});return{n:qs.length,d,ok}}
+function totals(){let d=0,ok=0;Q.forEach(q=>{const s=state[q.id];if(s&&s.done){d++;if(s.ok)ok++}});return{n:Q.length,d,ok,pct:d?Math.round(100*ok/d):0,prog:Math.round(100*d/Q.length)}}
+function ring(p,c){const r=24,C=2*Math.PI*r;return `<svg class="ring" viewBox="0 0 58 58"><circle cx="29" cy="29" r="${r}" fill="none" stroke="#eef0f5" stroke-width="7"/><circle cx="29" cy="29" r="${r}" fill="none" stroke="${c}" stroke-width="7" stroke-linecap="round" stroke-dasharray="${C*p/100} ${C}" transform="rotate(-90 29 29)"/><text x="29" y="33" text-anchor="middle" font-family="Inter" font-weight="700" font-size="12" fill="#17244a">${p}%</text></svg>`}
+function gp(){const t=totals();document.getElementById("gp").innerHTML=`<div class="row"><span>Progress</span><b>${t.d}/${t.n} · ${t.prog}%</b></div><div class="track"><i style="width:${t.prog}%"></i></div><div class="row" style="margin:8px 0 0"><span>Success rate</span><b>${t.pct}%</b></div>`}
+function nav(cur){gp();let h="",lp="";
+ h+=`<button class="${cur==="home"?"on":""}" onclick="go('home')"><span class="n">★</span>Overview</button>`;
+ CH.forEach(c=>{if(c.part!==lp){lp=c.part;h+=`<div class="plabel ${c.part==="II"?"e":""}">Part ${c.part} — ${c.part==="I"?"Neuroanatomy":"ENT"}</div>`}
+  const s=chStats(c.id);h+=`<button class="${part(c.id)} ${cur===c.id?"on":""}" onclick="go('${c.id}')"><span class="n">${c.num}</span>${c.t}<span class="cnt">${s.n}</span></button><div class="bar"><i style="width:${s.n?100*s.d/s.n:0}%"></i></div>`});
+ document.getElementById("nav").innerHTML=h}
+function go(id){var sd=document.getElementById("side");if(sd)sd.classList.remove("open");location.hash=id==="home"?"":id;render(id)}
+function render(id){nav(id);window.scrollTo(0,0);if(id==="home"||!CH.find(c=>c.id===id))return home();chapter(id)}
+function home(){const t=totals();
+ const lvl=t.d===0?"Let's start 🚀":t.pct>=85?"GOAT level 🐐":t.pct>=65?"Solid 💪":"Keep going 📚";
+ const next=CH.find(c=>{const s=chStats(c.id);return s.d<s.n});
+ let h=`<div class="hero2"><div class="goat">🐐</div><div class="k">S3 · Prof. Fliyou &amp; Pr Hajjij</div><h2>NeuroAnat &amp; ENT<br>QCM for the GOATs</h2>
+ <p>${Q.length} real exam questions, checked one by one against the course handbook. Every answer comes with the original question and the exact page of the handbook, framed in green.</p>
+ <div class="cta">${next?`<button class="w" onclick="go('${next.id}')">${t.d?"Continue":"Start"} — ${next.t} →</button>`:""}<button class="g" onclick="go('n1')">Neuroanatomy</button><button class="g" onclick="go('e1')">ENT</button></div></div>
+ <div class="stats">
+  <div class="stat">${ring(t.prog,"#3557a6")}<div><div class="v">${t.d}/${t.n}</div><div class="l">questions answered</div></div></div>
+  <div class="stat">${ring(t.pct,"#2e9e6a")}<div><div class="v">${t.pct}%</div><div class="l">success rate</div></div></div>
+  <div class="stat"><div style="font-size:34px">✅</div><div><div class="v">${t.ok}</div><div class="l">correct answers</div></div></div>
+  <div class="stat"><div style="font-size:34px">🏅</div><div><div class="v" style="font-size:17px">${lvl}</div><div class="l">your level</div></div></div>
+ </div>`;
+ ["I","II"].forEach(p=>{h+=`<h3 style="margin:8px 0 0">${p==="I"?"Part I — Neuroanatomy · Prof. Fliyou":"Part II — ENT · Pr Hajjij"}</h3><div class="grid">`;
+  CH.filter(c=>c.part===p).forEach(c=>{const s=chStats(c.id);const pr=s.n?Math.round(100*s.d/s.n):0;const pc=s.d?Math.round(100*s.ok/s.d):0;
+   h+=`<div class="ch ${part(c.id)}" onclick="go('${c.id}')"><div class="k">Chapter ${c.num}${pr===100&&pc>=85?'<span class="badge">GOAT 🐐</span>':""}</div><h3>${c.t}</h3>
+   <div class="pb"><i style="width:${pr}%"></i></div><div class="row"><span>${s.d}/${s.n} done</span><span class="pct">${s.d?pc+"% correct":"—"}</span></div></div>`});h+=`</div>`});
+ h+=`<div class="note"><b>How it works</b><ul>
+ <li>Several answers can be correct (French-style MCQ): the <span class="tag multi">Multiple answers</span> tag tells you when.</li>
+ <li>Tick, then <b>Check</b>: green = right, red = wrong, dashed green = missed. Then read the explanation, the handbook page (answer framed in green) and the original question.</li>
+ <li>Your progress and success rate are saved automatically in this browser — come back any time on the same phone or computer.</li></ul>
+ <div class="tools"><button class="btn" onclick="if(window.__r){resetAll()}else{window.__r=1;this.textContent='Click again to confirm reset'}">Reset all progress</button></div></div>`;
+ document.getElementById("main").innerHTML=h}
+function resetAll(){state={};save();window.__r=0;render("home")}
+function chapter(id){const c=CH.find(x=>x.id===id);const qs=byCh(id);const srcs=[...new Set(qs.map(q=>q.s))];
+ const f=state["_f_"+id]||"all";const list=qs.filter(q=>f==="all"||q.s===f);
+ const s=chStats(id);
+ let h=`<div class="hero ${part(id)}"><div class="k">${c.part==="I"?"Part I · Neuroanatomy":"Part II · ENT"} · Chapter ${c.num}</div><h2>${c.t}</h2><p>${qs.length} questions from ${srcs.join(", ")}.</p>
+ <div class="tools"><select class="btn" onchange="state['_f_${id}']=this.value;save();render('${id}')"><option value="all">All sources</option>${srcs.map(x=>`<option ${f===x?"selected":""}>${x}</option>`).join("")}</select>
+ <button class="btn" onclick="revealAll('${id}')">Show all answers</button><button class="btn" onclick="resetCh('${id}')">Restart chapter</button>
+ <span class="score">${s.ok} / ${s.d} correct · ${s.n-s.d} left</span></div></div><div class="${part(id)}">`;
+ list.forEach((q,k)=>h+=card(q,k+1));
+ if(!list.length)h+=`<p class="empty">No question for this filter.</p>`;
+ const i=CH.findIndex(x=>x.id===id);h+=`</div><div class="tools">${i>0?`<button class="btn" onclick="go('${CH[i-1].id}')">← ${CH[i-1].t}</button>`:""}${i<CH.length-1?`<button class="btn pri" style="margin-left:auto" onclick="go('${CH[i+1].id}')">${CH[i+1].t} →</button>`:""}</div>`;
+ document.getElementById("main").innerHTML=h}
+function card(q,k){const s=state[q.id]||{sel:[]};const done=!!s.done;const multi=q.a.length>1;
+ let o=q.o.map((t,i)=>{let cl="opt";if(done){const isA=q.a.includes(i),isS=s.sel.includes(i);if(isA&&isS)cl+=" right";else if(isS)cl+=" wrong";else if(isA)cl+=" missed"}else if(s.sel.includes(i))cl+=" sel";
+  return `<div class="${cl}" onclick="pick(${q.id},${i})"><span class="L">${L[i]}</span><span>${t}</span></div>`}).join("");
+ const res=done?`<span class="res ${s.ok?"ok":"ko"}">${s.ok?"✓ Correct":"✗ Not quite"} — answer: ${q.a.map(i=>L[i]).join(", ")}</span>`:"";
+ return `<div class="card ${done?"done":""}" id="q${q.id}"><div class="top"><span class="qn">${k}</span><div><div class="stem">${q.q}</div><div class="meta"><span class="tag">${q.s}</span><span class="tag pdf">📄 ${OG[q.id][0]} · p. ${OG[q.id][1]}</span><button class="tag ogb" onclick="tog(${q.id})">👁 Original question</button>${multi?'<span class="tag multi">Multiple answers</span>':""}</div></div></div>
+ <div class="og" id="og${q.id}"><span>As it appeared in <b>${OG[q.id][0]}</b>, page ${OG[q.id][1]} (letters or ticks on the scan are the answer key that circulated with the file, not necessarily correct).</span><img loading="lazy" src="og/q${q.id}.jpg" alt="Original question"></div><div class="opts">${o}</div><div class="act">${done?`<button class="btn" onclick="undo(${q.id})">Try again</button>`:`<button class="btn pri" onclick="check(${q.id})">Check</button>`}${res}</div>
+ <div class="exp"><b>Explanation.</b> ${q.e}<div class="src"><span>📖 Where it is in your handbook — <b>page ${PG[q.id]}</b> (answer framed in green)</span><img loading="lazy" src="ex/q${q.id}.jpg" alt="Handbook excerpt, page ${PG[q.id]}"></div></div></div>`}
+function tog(id){document.getElementById("og"+id).classList.toggle("on")}
+function refresh(q){const el=document.getElementById("q"+q.id);const k=el.querySelector(".qn").textContent;el.outerHTML=card(q,k);nav(q.c);updScore(q.c)}
+function updScore(id){const s=chStats(id);const sc=document.querySelector(".score");if(sc)sc.textContent=`${s.ok} / ${s.d} correct · ${s.n-s.d} left`}
+function pick(id,i){const q=Q[id];const s=state[id]||(state[id]={sel:[]});if(s.done)return;
+ if(q.a.length>1){s.sel=s.sel.includes(i)?s.sel.filter(x=>x!==i):[...s.sel,i]}else s.sel=[i];save();refresh(q)}
+function check(id){const q=Q[id];const s=state[id]||(state[id]={sel:[]});if(!s.sel.length)return;
+ s.done=true;s.ok=s.sel.length===q.a.length&&q.a.every(x=>s.sel.includes(x));save();refresh(q)}
+function undo(id){state[id]={sel:[]};save();refresh(Q[id])}
+function revealAll(id){byCh(id).forEach(q=>{const s=state[q.id]||(state[q.id]={sel:[]});if(!s.done){s.done=true;s.ok=s.sel.length===q.a.length&&q.a.every(x=>s.sel.includes(x))}});save();render(id)}
+function resetCh(id){byCh(id).forEach(q=>delete state[q.id]);save();render(id)}
+window.addEventListener("hashchange",()=>render(location.hash.slice(1)||"home"));
+render(location.hash.slice(1)||"home");
+</script></body></html>
