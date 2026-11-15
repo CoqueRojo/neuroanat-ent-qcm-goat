@@ -90,6 +90,25 @@ select.btn{padding:6px 8px}
 .ch .pct{font:700 12px Inter;padding:2px 8px;border-radius:20px;background:var(--tint);color:var(--acc)}
 .badge{display:inline-block;font:700 11px Inter;padding:3px 9px;border-radius:20px;background:#fff3d6;color:#8a5d00;margin-left:6px}
 @media(max-width:820px){.stats{grid-template-columns:repeat(2,1fr)}.hero2 h2{font-size:26px}.hero2 .goat{font-size:48px}}
+
+.sec{font:700 12px Inter;letter-spacing:.14em;text-transform:uppercase;color:var(--navy);margin-bottom:10px}
+.qsel{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.chk{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px}
+.chk label{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;cursor:pointer;font-size:14px;background:#fff}
+.chk label.on{border-color:var(--acc);background:var(--tint)}
+.chk input{display:none}.chk .n{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:700 11px Inter;background:var(--acc);color:#fff;flex:none}
+.chk em{margin-left:auto;font-style:normal;font-size:12px;color:var(--muted)}
+.sizes{display:flex;flex-wrap:wrap;gap:8px}
+.sz{min-width:52px;border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:9px 12px;font:700 15px Inter;color:var(--navy);cursor:pointer}
+.sz.on{background:var(--navy);color:#fff;border-color:var(--navy)}.sz.off{opacity:.45}
+.btn.big{padding:12px 22px;font-size:15px;border-radius:10px}.btn:disabled{opacity:.4;cursor:not-allowed}
+.small{font-size:13px;color:var(--muted)}
+.exbar{position:sticky;top:0;z-index:4;display:flex;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:14px;font:600 13px Inter;box-shadow:0 4px 14px rgba(23,36,74,.06)}
+.exbar .track i{background:linear-gradient(90deg,#3557a6,#2e9e6a)}
+.pcs{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.pc div:first-child{display:flex;justify-content:space-between;font-size:13.5px}.pc span{font-weight:700;color:var(--acc)}
+.pc .pb{height:8px;border-radius:5px;background:#eef0f5;overflow:hidden;margin-top:6px}.pc .pb i{display:block;height:100%}
+.why{font-size:13.5px;padding:3px 0}.why.t{color:#1d6b45}.why.f{color:#8a3a3a}
 .mtog{display:none}
 @media(max-width:820px){.layout{display:block}aside{position:sticky;top:0;z-index:5;width:auto;height:auto;padding:12px 14px}aside .sub{display:none}aside h1{font-size:17px;margin:2px 0 8px}aside .nav{display:none}aside.open .nav{display:block;max-height:70vh;overflow:auto}.mtog{display:block;position:absolute;right:14px;top:14px;border:0;border-radius:8px;background:rgba(255,255,255,.15);color:#fff;font:700 13px Inter;padding:7px 11px}main{padding:18px}.opts,.act,.exp{margin-left:0}}
 </style></head>
@@ -286,17 +305,18 @@ function ring(p,c){const r=24,C=2*Math.PI*r;return `<svg class="ring" viewBox="0
 function gp(){const t=totals();document.getElementById("gp").innerHTML=`<div class="row"><span>Progress</span><b>${t.d}/${t.n} · ${t.prog}%</b></div><div class="track"><i style="width:${t.prog}%"></i></div><div class="row" style="margin:8px 0 0"><span>Success rate</span><b>${t.pct}%</b></div>`}
 function nav(cur){gp();let h="",lp="";
  h+=`<button class="${cur==="home"?"on":""}" onclick="go('home')"><span class="n">★</span>Overview</button>`;
+ h+=`<button class="${cur==="exam"?"on":""}" onclick="go('exam')"><span class="n">🎯</span>Exam generator</button>`;
  CH.forEach(c=>{if(c.part!==lp){lp=c.part;h+=`<div class="plabel ${c.part==="II"?"e":""}">Part ${c.part} — ${c.part==="I"?"Neuroanatomy":"ENT"}</div>`}
   const s=chStats(c.id);h+=`<button class="${part(c.id)} ${cur===c.id?"on":""}" onclick="go('${c.id}')"><span class="n">${c.num}</span>${c.t}<span class="cnt">${s.n}</span></button><div class="bar"><i style="width:${s.n?100*s.d/s.n:0}%"></i></div>`});
  document.getElementById("nav").innerHTML=h}
 function go(id){var sd=document.getElementById("side");if(sd)sd.classList.remove("open");location.hash=id==="home"?"":id;render(id)}
-function render(id){nav(id);window.scrollTo(0,0);if(id==="home"||!CH.find(c=>c.id===id))return home();chapter(id)}
+function render(id){nav(id);window.scrollTo(0,0);if(id==="exam")return examView();if(id==="home"||!CH.find(c=>c.id===id))return home();chapter(id)}
 function home(){const t=totals();
  const lvl=t.d===0?"Let's start 🚀":t.pct>=85?"GOAT level 🐐":t.pct>=65?"Solid 💪":"Keep going 📚";
  const next=CH.find(c=>{const s=chStats(c.id);return s.d<s.n});
  let h=`<div class="hero2"><div class="goat">🐐</div><div class="k">S3 · Prof. Fliyou &amp; Pr Hajjij</div><h2>NeuroAnat &amp; ENT<br>QCM for the GOATs</h2>
  <p>${Q.length} real exam questions, checked one by one against the course handbook. Every answer comes with the original question and the exact page of the handbook, framed in green.</p>
- <div class="cta">${next?`<button class="w" onclick="go('${next.id}')">${t.d?"Continue":"Start"} — ${next.t} →</button>`:""}<button class="g" onclick="go('n1')">Neuroanatomy</button><button class="g" onclick="go('e1')">ENT</button></div></div>
+ <div class="cta">${next?`<button class="w" onclick="go('${next.id}')">${t.d?"Continue":"Start"} — ${next.t} →</button>`:""}<button class="w" style="background:#ffd166" onclick="go('exam')">🎯 Generate an exam</button><button class="g" onclick="go('n1')">Neuroanatomy</button><button class="g" onclick="go('e1')">ENT</button></div></div>
  <div class="stats">
   <div class="stat">${ring(t.prog,"#3557a6")}<div><div class="v">${t.d}/${t.n}</div><div class="l">questions answered</div></div></div>
   <div class="stat">${ring(t.pct,"#2e9e6a")}<div><div class="v">${t.pct}%</div><div class="l">success rate</div></div></div>
@@ -342,6 +362,71 @@ function check(id){const q=Q[id];const s=state[id]||(state[id]={sel:[]});if(!s.s
 function undo(id){state[id]={sel:[]};save();refresh(Q[id])}
 function revealAll(id){byCh(id).forEach(q=>{const s=state[q.id]||(state[q.id]={sel:[]});if(!s.done){s.done=true;s.ok=s.sel.length===q.a.length&&q.a.every(x=>s.sel.includes(x))}});save();render(id)}
 function resetCh(id){byCh(id).forEach(q=>delete state[q.id]);save();render(id)}
+
+// ================= EXAM GENERATOR =================
+const SIZES=[5,10,15,20,30,40,50,60,70,80,100];
+let EX={sel:new Set(CH.map(c=>c.id)),n:20,list:null,ans:{},sub:false};
+function shuf(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function buildExam(){const ids=CH.filter(c=>EX.sel.has(c.id)).map(c=>c.id);if(!ids.length)return;
+ const pools={};ids.forEach(id=>pools[id]=shuf(byCh(id)));
+ const max=ids.reduce((s,id)=>s+pools[id].length,0);const n=Math.min(EX.n,max);
+ const out=[];let k=0;let order=shuf(ids);
+ while(out.length<n){const id=order[k%order.length];if(pools[id].length)out.push(pools[id].shift());k++;
+  if(k%order.length===0)order=shuf(order.filter(x=>pools[x].length));if(!order.length)break}
+ // keep chapter order for reading comfort, shuffled inside each chapter
+ const rank=Object.fromEntries(CH.map((c,i)=>[c.id,i]));
+ EX.list=out.sort((a,b)=>rank[a.c]-rank[b.c]);EX.ans={};EX.sub=false;render("exam")}
+function examView(){const m=document.getElementById("main");
+ if(EX.list){return examRun()}
+ const avail=CH.filter(c=>EX.sel.has(c.id)).reduce((s,c)=>s+byCh(c.id).length,0);
+ let h=`<div class="hero2"><div class="goat">🎯</div><div class="k">Exam generator</div><h2>Build your own exam</h2><p>Pick the chapters and the number of questions. Questions are spread evenly across the chapters you choose — no 15 thyroid questions and 3 on the rest. You get your score and a detailed correction at the end.</p></div>
+ <div class="card"><div class="sec">1 · Chapters</div><div class="qsel">
+ <button class="btn" onclick="exAll('all')">All</button><button class="btn" onclick="exAll('n')">All Neuroanatomy</button><button class="btn" onclick="exAll('e')">All ENT</button><button class="btn" onclick="exAll('none')">None</button></div>
+ <div class="chk">${CH.map(c=>`<label class="${part(c.id)} ${EX.sel.has(c.id)?"on":""}"><input type="checkbox" ${EX.sel.has(c.id)?"checked":""} onchange="exTog('${c.id}')"><span class="n">${c.num}</span><span>${c.t}</span><em>${byCh(c.id).length}</em></label>`).join("")}</div>
+ <div class="sec" style="margin-top:18px">2 · Number of questions</div><div class="sizes">${SIZES.map(s=>`<button class="sz ${EX.n===s?"on":""} ${s>avail?"off":""}" onclick="EX.n=${s};render('exam')">${s}</button>`).join("")}</div>
+ <p class="small" style="margin:10px 0 0">${avail} questions available in the selected chapters${EX.n>avail?` — the exam will use all ${avail}.`:"."}${EX.sel.size?` About ${Math.max(1,Math.round(Math.min(EX.n,avail)/EX.sel.size))} per chapter.`:""}</p>
+ <div style="margin-top:16px"><button class="btn pri big" ${EX.sel.size?"":"disabled"} onclick="buildExam()">Start the exam →</button></div></div>`;
+ m.innerHTML=h}
+function exTog(id){EX.sel.has(id)?EX.sel.delete(id):EX.sel.add(id);render("exam")}
+function exAll(w){EX.sel=new Set(w==="none"?[]:CH.filter(c=>w==="all"||c.id[0]===w).map(c=>c.id));render("exam")}
+function exPick(id,i){if(EX.sub)return;const q=Q[id];const s=EX.ans[id]||(EX.ans[id]=[]);
+ if(q.a.length>1){const k=s.indexOf(i);k>=0?s.splice(k,1):s.push(i)}else EX.ans[id]=[i];
+ const el=document.getElementById("x"+id);el.outerHTML=exCard(q,+el.dataset.k);exBar()}
+function exOk(q){const s=EX.ans[q.id]||[];return s.length===q.a.length&&q.a.every(x=>s.includes(x))}
+function exCard(q,k){const s=EX.ans[q.id]||[];const multi=q.a.length>1;const c=CH.find(x=>x.id===q.c);
+ const o=q.o.map((t,i)=>{let cl="opt";if(EX.sub){const A=q.a.includes(i),S=s.includes(i);if(A&&S)cl+=" right";else if(S)cl+=" wrong";else if(A)cl+=" missed"}else if(s.includes(i))cl+=" sel";
+  return `<div class="${cl}" onclick="exPick(${q.id},${i})"><span class="L">${L[i]}</span><span>${t}</span></div>`}).join("");
+ let res="";if(EX.sub){const ok=exOk(q);res=`<div class="act"><span class="res ${ok?"ok":"ko"}">${ok?"✓ Correct":(s.length?"✗ Wrong":"— Not answered")} · correct answer: ${q.a.map(i=>L[i]).join(", ")}${s.length?` · your answer: ${s.slice().sort().map(i=>L[i]).join(", ")}`:""}</span></div>
+  <div class="exp" style="display:block"><b>Detailed correction.</b> ${q.o.map((t,i)=>`<div class="why ${q.a.includes(i)?"t":"f"}">${q.a.includes(i)?"✔":"✘"} <b>${L[i]}</b> — ${t}</div>`).join("")}<p style="margin:8px 0 0">${q.e}</p>
+  <div class="src"><span>📖 Handbook <b>page ${PG[q.id]}</b> (answer framed in green)</span><img loading="lazy" src="ex/q${q.id}.jpg"></div>
+  <div class="src"><span>📄 Original: <b>${OG[q.id][0]}</b>, page ${OG[q.id][1]}</span><img loading="lazy" src="og/q${q.id}.jpg"></div></div>`}
+ return `<div class="card ${part(q.c)} ${EX.sub?"done":""}" id="x${q.id}" data-k="${k}"><div class="top"><span class="qn">${k}</span><div><div class="stem">${q.q}</div><div class="meta"><span class="tag">Ch. ${c.num} · ${c.t}</span><span class="tag">${q.s}</span>${multi?'<span class="tag multi">Multiple answers</span>':""}</div></div></div><div class="opts">${o}</div>${res}</div>`}
+function exBar(){const n=EX.list.length,d=EX.list.filter(q=>(EX.ans[q.id]||[]).length).length;const b=document.getElementById("exbar");if(b)b.innerHTML=`<span>${d}/${n} answered</span><div class="track" style="flex:1;background:#e3e6ee"><i style="width:${100*d/n}%"></i></div><button class="btn pri" onclick="exSubmit()">Submit exam</button>`}
+function exSubmit(){const left=EX.list.filter(q=>!(EX.ans[q.id]||[]).length).length;
+ if(left&&!window.__sx){window.__sx=1;const b=document.querySelector("#exbar .btn");b.textContent=`${left} unanswered — click again to submit`;return}
+ window.__sx=0;EX.sub=true;
+ // count exam answers in global progress too
+ EX.list.forEach(q=>{state[q.id]={sel:(EX.ans[q.id]||[]).slice(),done:true,ok:exOk(q)}});save();
+ try{const hist=JSON.parse(localStorage.getItem("mcq-exams")||"[]");hist.push({d:Date.now(),n:EX.list.length,ok:EX.list.filter(exOk).length});localStorage.setItem("mcq-exams",JSON.stringify(hist.slice(-20)))}catch(e){}
+ render("exam")}
+function examRun(){const n=EX.list.length;let h="";
+ if(EX.sub){const ok=EX.list.filter(exOk).length;const pct=Math.round(100*ok/n);const note20=(20*ok/n).toFixed(1);
+  const lvl=pct>=85?"GOAT level 🐐":pct>=70?"Very good 💪":pct>=50?"Pass — keep going 📚":"Review the handbook 📖";
+  const per=CH.filter(c=>EX.list.some(q=>q.c===c.id)).map(c=>{const qs=EX.list.filter(q=>q.c===c.id);const o=qs.filter(exOk).length;const p=Math.round(100*o/qs.length);
+   return `<div class="pc ${part(c.id)}"><div><b>${c.num}. ${c.t}</b><span>${o}/${qs.length}</span></div><div class="pb"><i style="width:${p}%;background:${p>=70?"#2e9e6a":p>=50?"#e0a419":"#c0392b"}"></i></div></div>`}).join("");
+  let hist=[];try{hist=JSON.parse(localStorage.getItem("mcq-exams")||"[]")}catch(e){}
+  h+=`<div class="hero2"><div class="goat">${pct>=85?"🐐":pct>=50?"🎉":"📖"}</div><div class="k">Exam result</div><h2>${ok} / ${n} correct · ${pct}%</h2><p>Grade: <b>${note20} / 20</b> · ${lvl}${hist.length>1?` · previous exam: ${Math.round(100*hist[hist.length-2].ok/hist[hist.length-2].n)}%`:""}</p>
+  <div class="cta"><button class="w" onclick="EX.list=null;render('exam')">New exam</button><button class="g" onclick="exRetry()">Retry the same questions</button><button class="g" onclick="exWrongOnly()">Only my mistakes</button></div></div>
+  <div class="card"><div class="sec">Score by chapter</div><div class="pcs">${per}</div></div>
+  <h3 style="margin:18px 0 10px">Detailed correction</h3>`}
+ else h+=`<div class="hero2" style="padding:22px 28px"><div class="k">Exam in progress</div><h2 style="font-size:26px">${n} questions · ${new Set(EX.list.map(q=>q.c)).size} chapters</h2><p style="margin:0">Answer everything, then submit — the correction appears only at the end.</p></div>
+  <div class="exbar" id="exbar"></div>`;
+ EX.list.forEach((q,i)=>h+=exCard(q,i+1));
+ if(!EX.sub)h+=`<div style="margin-top:10px"><button class="btn pri big" onclick="exSubmit()">Submit exam</button> <button class="btn" onclick="EX.list=null;render('exam')">Cancel</button></div>`;
+ document.getElementById("main").innerHTML=h;if(!EX.sub)exBar()}
+function exRetry(){EX.ans={};EX.sub=false;EX.list=shuf(EX.list);render("exam")}
+function exWrongOnly(){const w=EX.list.filter(q=>!exOk(q));if(!w.length)return;EX.list=w;EX.ans={};EX.sub=false;render("exam")}
+
 window.addEventListener("hashchange",()=>render(location.hash.slice(1)||"home"));
 render(location.hash.slice(1)||"home");
 </script></body></html>
