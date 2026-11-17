@@ -156,7 +156,7 @@ body.dark .panel,body.dark .pstat div{background:#161e33;border-color:#2c3550}bo
  <div class="brand">S3 · UM6SS · 🐐</div>
  <h1>NeuroAnat &amp; ENT<br>QCM for the GOATs</h1>
  <div class="sub">Past questions from Prof. Fliyou &amp; Pr Hajjij, checked against your lectures.</div>
- <div class="cd" id="cd"></div><div class="tb"><button onclick="toggleDark()" id="dmb">🌙 Night mode</button><button onclick="hardReset(this)">↺ Reset progress</button></div><div class="gp" id="gp"></div><div class="nav" id="nav"></div>
+ <div class="cd" id="cd"></div><div class="tb"><button onclick="toggleDark()" id="dmb">🌙 Night mode</button><button onclick="hardReset(this)">↺ Reset progress</button></div><div class="tb"><button onclick="syncUI()">☁️ Account / sync</button></div><div class="gp" id="gp"></div><div class="nav" id="nav"></div>
 </aside>
 <main id="main"></main>
 </div>
@@ -316,7 +316,7 @@ const PG={};
 <script>
 const L="ABCDE";let state={};try{state=JSON.parse(localStorage.getItem("mcq-state")||"{}")}catch(e){state={}}
 Object.keys(state).forEach(k=>{const s=state[k];if(s&&s.sel&&Q[k]&&s.sel.some(i=>i>=Q[k].o.length))delete state[k]});
-const save=()=>{try{localStorage.setItem("mcq-state",JSON.stringify(state))}catch(e){}};
+let save=()=>{try{localStorage.setItem("mcq-state",JSON.stringify(state))}catch(e){}};
 Q.forEach((q,i)=>q.id=i);
 const byCh=id=>Q.filter(q=>q.c===id);
 const part=id=>id[0]==="n"?"neuro":"ent";
@@ -475,6 +475,29 @@ function tick(){const el=document.getElementById("cd");if(!el)return;const ms=EX
 setInterval(tick,1000);setTimeout(tick,50);
 function toggleDark(){document.body.classList.toggle("dark");const on=document.body.classList.contains("dark");try{localStorage.setItem("mcq-dark",on?"1":"0")}catch(e){}document.getElementById("dmb").textContent=on?"☀️ Day mode":"🌙 Night mode"}
 try{if(localStorage.getItem("mcq-dark")==="1"){document.body.classList.add("dark");setTimeout(()=>{const b=document.getElementById("dmb");if(b)b.textContent="☀️ Day mode"},0)}}catch(e){}
+
+// ===== cloud sync (sync code) =====
+const API="https://jsonblob.com/api/jsonBlob";
+function syncId(){try{return localStorage.getItem("mcq-sync")||""}catch(e){return ""}}
+function pack(){let ex=[];try{ex=JSON.parse(localStorage.getItem("mcq-exams")||"[]")}catch(e){}return {state,ex,t:Date.now()}}
+function unpack(d){state=d.state||{};save();try{localStorage.setItem("mcq-exams",JSON.stringify(d.ex||[]))}catch(e){}render("home")}
+async function pushCloud(silent){const id=syncId();const body=JSON.stringify(pack());
+ try{if(id){const r=await fetch(API+"/"+id,{method:"PUT",headers:{"Content-Type":"application/json"},body});if(!r.ok)throw 0;return id}
+ const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body});if(!r.ok)throw 0;
+ let nid=r.headers.get("x-jsonblob-id")||(r.headers.get("location")||"").split("/").pop();if(!nid)throw 0;localStorage.setItem("mcq-sync",nid);return nid}catch(e){if(!silent)alert("Cloud save failed. Use 'Copy backup code' instead.");return null}}
+async function pullCloud(id){try{const r=await fetch(API+"/"+id.trim(),{headers:{"Accept":"application/json"}});if(!r.ok)throw 0;const d=await r.json();localStorage.setItem("mcq-sync",id.trim());unpack(d);alert("Progress loaded ✔");return true}catch(e){alert("Code not found / no internet.");return false}}
+let _st;const _save0=save;save=function(){_save0();if(syncId()){clearTimeout(_st);_st=setTimeout(()=>pushCloud(true),1500)}};
+function syncUI(){const id=syncId();const m=document.getElementById("main");nav("sync");
+ m.innerHTML=`<div class="card" style="max-width:640px"><h2 style="margin-top:0">☁️ Save & continue on another device</h2>
+ <h3>1. Cloud sync code (automatic)</h3>
+ ${id?`<p>Your sync code:</p><div style="font:700 22px monospace;background:#eef0f5;color:#1a2440;padding:12px;border-radius:10px;word-break:break-all">${id}</div><p class="small">Every answer is now saved online automatically. On your phone: open the site → ☁️ Account / sync → paste this code → Load.</p><button class="btn" onclick="navigator.clipboard.writeText('${id}');this.textContent='Copied ✔'">📋 Copy code</button> <button class="btn pri" onclick="pushCloud().then(x=>x&&alert('Saved ✔'))">⬆ Save now</button>`
+ :`<button class="btn pri" onclick="pushCloud().then(x=>x&&syncUI())">Create my sync code</button>`}
+ <p style="margin-top:18px"><b>Already have a code?</b> (from your other device)</p><input id="sc" placeholder="Paste sync code" style="width:100%;padding:11px;border-radius:10px;border:1px solid #ccd;font-size:15px"><button class="btn pri" style="margin-top:8px" onclick="pullCloud(document.getElementById('sc').value).then(x=>x&&syncUI())">⬇ Load my progress</button>
+ <h3 style="margin-top:26px">2. Backup code (works offline, always)</h3><p class="small">Copy it, send it to yourself (WhatsApp, mail…), paste it on the other device.</p>
+ <button class="btn" onclick="navigator.clipboard.writeText(btoa(unescape(encodeURIComponent(JSON.stringify(pack())))));this.textContent='Copied ✔'">📋 Copy backup code</button>
+ <textarea id="bk" placeholder="Paste a backup code here" style="width:100%;height:80px;margin-top:10px;border-radius:10px;padding:8px"></textarea>
+ <button class="btn" onclick="try{unpack(JSON.parse(decodeURIComponent(escape(atob(document.getElementById('bk').value.trim())))));alert('Progress restored ✔')}catch(e){alert('Invalid code')}">⬇ Restore backup</button></div>`}
+
 function hardReset(b){if(!b.dataset.c){b.dataset.c=1;b.textContent="Sure? Click again";setTimeout(()=>{b.dataset.c="";b.textContent="↺ Reset progress"},4000);return}
  state={};try{localStorage.removeItem("mcq-state");localStorage.removeItem("mcq-exams")}catch(e){}EX.list=null;EX.ans={};EX.sub=false;b.dataset.c="";b.textContent="↺ Reset progress";go("home")}
 document.addEventListener("keydown",e=>{if(e.target.tagName==="SELECT"||e.target.tagName==="INPUT")return;const id=location.hash.slice(1)||"home";
