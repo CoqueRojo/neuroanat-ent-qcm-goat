@@ -49,7 +49,7 @@ select.btn{padding:6px 8px}
 .opt.wrong{border-color:var(--bad);background:var(--badtint)}.opt.wrong .L{background:var(--bad);border-color:var(--bad);color:#fff}
 .opt.missed{border-style:dashed;border-color:var(--ok)}
 .act{margin:12px 0 0 38px;display:flex;gap:8px;align-items:center}
-.res{font:700 13px Inter}.res.ok{color:var(--ok)}.res.ko{color:var(--bad)}
+.res{font:700 13px Inter}.res.ok{color:var(--ok)}.res.half{color:#c98a00}.res.ko{color:var(--bad)}
 .exp{margin:10px 0 0 38px;padding:10px 14px;border-left:4px solid var(--ok);background:#f4fbf7;border-radius:0 8px 8px 0;font-size:14px;display:none}
 .done .exp{display:block}
 .exp b{color:var(--ok)}
@@ -283,8 +283,11 @@ const save=()=>{try{localStorage.setItem("mcq-state",JSON.stringify(state))}catc
 Q.forEach((q,i)=>q.id=i);
 const byCh=id=>Q.filter(q=>q.c===id);
 const part=id=>id[0]==="n"?"neuro":"ent";
-function chStats(id){const qs=byCh(id);let d=0,ok=0;qs.forEach(q=>{const s=state[q.id];if(s&&s.done){d++;if(s.ok)ok++}});return{n:qs.length,d,ok}}
-function totals(){let d=0,ok=0;Q.forEach(q=>{const s=state[q.id];if(s&&s.done){d++;if(s.ok)ok++}});return{n:Q.length,d,ok,pct:d?Math.round(100*ok/d):0,prog:Math.round(100*d/Q.length)}}
+function pts(sel,a){sel=sel||[];if(!sel.length||sel.some(x=>!a.includes(x)))return 0;const miss=a.length-sel.length;return miss===0?1:(miss===1?0.5:0)}
+const P=s=>s.pt!=null?s.pt:(s.ok?1:0);
+const fmt=x=>(Math.round(x*10)/10).toString().replace(/\.0$/,"");
+function chStats(id){const qs=byCh(id);let d=0,ok=0;qs.forEach(q=>{const s=state[q.id];if(s&&s.done){d++;ok+=P(s)}});return{n:qs.length,d,ok:Math.round(ok*10)/10}}
+function totals(){let d=0,ok=0;Q.forEach(q=>{const s=state[q.id];if(s&&s.done){d++;ok+=P(s)}});ok=Math.round(ok*10)/10;return{n:Q.length,d,ok,pct:d?Math.round(100*ok/d):0,prog:Math.round(100*d/Q.length)}}
 function ring(p,c){const r=24,C=2*Math.PI*r;return `<svg class="ring" viewBox="0 0 58 58"><circle cx="29" cy="29" r="${r}" fill="none" stroke="#eef0f5" stroke-width="7"/><circle cx="29" cy="29" r="${r}" fill="none" stroke="${c}" stroke-width="7" stroke-linecap="round" stroke-dasharray="${C*p/100} ${C}" transform="rotate(-90 29 29)"/><text x="29" y="33" text-anchor="middle" font-family="Inter" font-weight="700" font-size="12" fill="#17244a">${p}%</text></svg>`}
 function gp(){const t=totals();document.getElementById("gp").innerHTML=`<div class="row"><span>Progress</span><b>${t.d}/${t.n} · ${t.prog}%</b></div><div class="track"><i style="width:${t.prog}%"></i></div><div class="row" style="margin:8px 0 0"><span>Success rate</span><b>${t.pct}%</b></div>`}
 function nav(cur){gp();let h="",lp="";
@@ -314,7 +317,7 @@ function home(){const t=totals();
  h+=`<div class="note"><b>How it works</b><ul>
  <li>Several answers can be correct (French-style MCQ): the <span class="tag multi">Multiple answers</span> tag tells you when.</li>
  <li>Tick, then <b>Check</b>: green = right, red = wrong, dashed green = missed. Then read the explanation, the lecture slide (key words framed in green) and the original question.</li>
- <li>Your progress and success rate are saved automatically in this browser — come back any time on the same phone or computer.</li></ul>
+ <li><b>Scoring:</b> 1 pt if you tick exactly the right answers · 0.5 pt if you miss ONE right answer and tick nothing wrong · 0 if you tick any wrong answer or miss two or more.</li><li>Your progress and success rate are saved automatically in this browser — come back any time on the same phone or computer.</li></ul>
  <div class="tools"><button class="btn" onclick="if(window.__r){resetAll()}else{window.__r=1;this.textContent='Click again to confirm reset'}">Reset all progress</button></div></div>`;
  document.getElementById("main").innerHTML=h}
 function resetAll(){state={};save();window.__r=0;render("home")}
@@ -324,7 +327,7 @@ function chapter(id){const c=CH.find(x=>x.id===id);const qs=byCh(id);const srcs=
  let h=`<div class="hero ${part(id)}"><div class="k">${c.part==="I"?"Part I · Neuroanatomy":"Part II · ENT"} · Chapter ${c.num}</div><h2>${c.t}</h2><p>${qs.length} questions from ${srcs.join(", ")}.</p>
  <div class="tools"><select class="btn" onchange="state['_f_${id}']=this.value;save();render('${id}')"><option value="all">All sources</option>${srcs.map(x=>`<option ${f===x?"selected":""}>${x}</option>`).join("")}</select>
  <button class="btn" onclick="revealAll('${id}')">Show all answers</button><button class="btn" onclick="resetCh('${id}')">Restart chapter</button>
- <span class="score">${s.ok} / ${s.d} correct · ${s.n-s.d} left</span></div></div><div class="${part(id)}">`;
+ <span class="score">${fmt(s.ok)} / ${s.d} pts · ${s.n-s.d} left</span></div></div><div class="${part(id)}">`;
  list.forEach((q,k)=>h+=card(q,k+1));
  if(!list.length)h+=`<p class="empty">No question for this filter.</p>`;
  const i=CH.findIndex(x=>x.id===id);h+=`</div><div class="tools">${i>0?`<button class="btn" onclick="go('${CH[i-1].id}')">← ${CH[i-1].t}</button>`:""}${i<CH.length-1?`<button class="btn pri" style="margin-left:auto" onclick="go('${CH[i+1].id}')">${CH[i+1].t} →</button>`:""}</div>`;
@@ -332,19 +335,19 @@ function chapter(id){const c=CH.find(x=>x.id===id);const qs=byCh(id);const srcs=
 function card(q,k){const s=state[q.id]||{sel:[]};const done=!!s.done;const multi=q.a.length>1;
  let o=q.o.map((t,i)=>{let cl="opt";if(done){const isA=q.a.includes(i),isS=s.sel.includes(i);if(isA&&isS)cl+=" right";else if(isS)cl+=" wrong";else if(isA)cl+=" missed"}else if(s.sel.includes(i))cl+=" sel";
   return `<div class="${cl}" onclick="pick(${q.id},${i})"><span class="L">${L[i]}</span><span>${t}</span></div>`}).join("");
- const res=done?`<span class="res ${s.ok?"ok":"ko"}">${s.ok?"✓ Correct":"✗ Not quite"} — answer: ${q.a.map(i=>L[i]).join(", ")}</span>`:"";
+ const pp=done?P(s):0;const res=done?`<span class="res ${pp===1?"ok":pp>0?"half":"ko"}">${pp===1?"✓ Correct · 1 pt":pp>0?"◐ Partly right · 0.5 pt":"✗ Wrong · 0 pt"} — answer: ${q.a.map(i=>L[i]).join(", ")}</span>`:"";
  return `<div class="card ${done?"done":""}" id="q${q.id}"><div class="top"><span class="qn">${k}</span><div><div class="stem">${q.q}</div><div class="meta"><span class="tag">${q.s}</span><span class="tag pdf">📄 ${OG[q.id][0]} · p. ${OG[q.id][1]}</span><button class="tag ogb" onclick="tog(${q.id})">👁 Original question</button>${multi?'<span class="tag multi">Multiple answers</span>':""}</div></div></div>
  <div class="og" id="og${q.id}"><span>As it appeared in <b>${OG[q.id][0]}</b>, page ${OG[q.id][1]} (letters or ticks on the scan are the answer key that circulated with the file, not necessarily correct).</span><img loading="lazy" src="og/q${q.id}.jpg" alt="Original question"></div><div class="opts">${o}</div><div class="act">${done?`<button class="btn" onclick="undo(${q.id})">Try again</button>`:`<button class="btn pri" onclick="check(${q.id})">Check</button>`}${res}</div>
  <div class="exp"><b>Explanation.</b> ${q.e}<div class="src"><span>🎓 Lecture slide — <b>${SL[q.id][0]}</b>, slide ${SL[q.id][1]} (key words framed in green)</span><img loading="lazy" src="sl/q${q.id}.jpg" alt="Lecture slide"></div></div></div>`}
 function tog(id){document.getElementById("og"+id).classList.toggle("on")}
 function refresh(q){const el=document.getElementById("q"+q.id);const k=el.querySelector(".qn").textContent;el.outerHTML=card(q,k);nav(q.c);updScore(q.c)}
-function updScore(id){const s=chStats(id);const sc=document.querySelector(".score");if(sc)sc.textContent=`${s.ok} / ${s.d} correct · ${s.n-s.d} left`}
+function updScore(id){const s=chStats(id);const sc=document.querySelector(".score");if(sc)sc.textContent=`${fmt(s.ok)} / ${s.d} pts · ${s.n-s.d} left`}
 function pick(id,i){const q=Q[id];const s=state[id]||(state[id]={sel:[]});if(s.done)return;
  if(q.a.length>1){s.sel=s.sel.includes(i)?s.sel.filter(x=>x!==i):[...s.sel,i]}else s.sel=[i];save();refresh(q)}
 function check(id){const q=Q[id];const s=state[id]||(state[id]={sel:[]});if(!s.sel.length)return;
- s.done=true;s.ok=s.sel.length===q.a.length&&q.a.every(x=>s.sel.includes(x));save();refresh(q)}
+ s.done=true;s.pt=pts(s.sel,q.a);s.ok=s.pt===1;save();refresh(q)}
 function undo(id){state[id]={sel:[]};save();refresh(Q[id])}
-function revealAll(id){byCh(id).forEach(q=>{const s=state[q.id]||(state[q.id]={sel:[]});if(!s.done){s.done=true;s.ok=s.sel.length===q.a.length&&q.a.every(x=>s.sel.includes(x))}});save();render(id)}
+function revealAll(id){byCh(id).forEach(q=>{const s=state[q.id]||(state[q.id]={sel:[]});if(!s.done){s.done=true;s.pt=pts(s.sel,q.a);s.ok=s.pt===1}});save();render(id)}
 function resetCh(id){byCh(id).forEach(q=>delete state[q.id]);save();render(id)}
 
 // ================= EXAM GENERATOR =================
@@ -370,7 +373,7 @@ function buildExam(){const ids=CH.filter(c=>EX.sel.has(c.id)).map(c=>c.id);if(!i
 function examView(){const m=document.getElementById("main");
  if(EX.list){return examRun()}
  const avail=CH.filter(c=>EX.sel.has(c.id)).reduce((s,c)=>s+byCh(c.id).length,0);
- let h=`<div class="hero2"><div class="goat">🎯</div><div class="k">Exam generator</div><h2>Build your own exam</h2><p>Pick the chapters and the number of questions. In <b>Realistic</b> mode, chapters that come up most often in past exams get more questions, like in the real final; <b>Balanced</b> mode spreads them evenly. You get your score and a detailed correction at the end.</p></div>
+ let h=`<div class="hero2"><div class="goat">🎯</div><div class="k">Exam generator</div><h2>Build your own exam</h2><p>Pick the chapters and the number of questions. In <b>Realistic</b> mode, chapters that come up most often in past exams get more questions, like in the real final; <b>Balanced</b> mode spreads them evenly. Scoring like the real exam: all correct answers = 1 pt · one correct answer missing (and no wrong one) = 0.5 pt · any wrong answer ticked = 0.</p></div>
  <div class="card"><div class="sec">1 · Chapters</div><div class="qsel">
  <button class="btn" onclick="exAll('all')">All</button><button class="btn" onclick="exAll('n')">All Neuroanatomy</button><button class="btn" onclick="exAll('e')">All ENT</button><button class="btn" onclick="exAll('none')">None</button></div>
  <div class="chk">${CH.map(c=>`<label class="${part(c.id)} ${EX.sel.has(c.id)?"on":""}"><input type="checkbox" ${EX.sel.has(c.id)?"checked":""} onchange="exTog('${c.id}')"><span class="n">${c.num}</span><span>${c.t}</span><em>${byCh(c.id).length}</em></label>`).join("")}</div>
@@ -390,7 +393,7 @@ function exOk(q){const s=EX.ans[q.id]||[];return s.length===q.a.length&&q.a.ever
 function exCard(q,k){const s=EX.ans[q.id]||[];const multi=q.a.length>1;const c=CH.find(x=>x.id===q.c);
  const o=q.o.map((t,i)=>{let cl="opt";if(EX.sub){const A=q.a.includes(i),S=s.includes(i);if(A&&S)cl+=" right";else if(S)cl+=" wrong";else if(A)cl+=" missed"}else if(s.includes(i))cl+=" sel";
   return `<div class="${cl}" onclick="exPick(${q.id},${i})"><span class="L">${L[i]}</span><span>${t}</span></div>`}).join("");
- let res="";if(EX.sub){const ok=exOk(q);res=`<div class="act"><span class="res ${ok?"ok":"ko"}">${ok?"✓ Correct":(s.length?"✗ Wrong":"— Not answered")} · correct answer: ${q.a.map(i=>L[i]).join(", ")}${s.length?` · your answer: ${s.slice().sort().map(i=>L[i]).join(", ")}`:""}</span></div>
+ let res="";if(EX.sub){const pp=pts(s,q.a);const ok=pp===1;res=`<div class="act"><span class="res ${ok?"ok":pp>0?"half":"ko"}">${ok?"✓ Correct · 1 pt":pp>0?"◐ Partly right · 0.5 pt":(s.length?"✗ Wrong · 0 pt":"— Not answered · 0 pt")} · correct answer: ${q.a.map(i=>L[i]).join(", ")}${s.length?` · your answer: ${s.slice().sort().map(i=>L[i]).join(", ")}`:""}</span></div>
   <div class="exp" style="display:block"><b>Detailed correction.</b> ${q.o.map((t,i)=>`<div class="why ${q.a.includes(i)?"t":"f"}">${q.a.includes(i)?"✔":"✘"} <b>${L[i]}</b> — ${t}</div>`).join("")}<p style="margin:8px 0 0">${q.e}</p>
   <div class="src"><span>🎓 Lecture slide — <b>${SL[q.id][0]}</b>, slide ${SL[q.id][1]}</span><img loading="lazy" src="sl/q${q.id}.jpg"></div>
   <div class="src"><span>📄 Original: <b>${OG[q.id][0]}</b>, page ${OG[q.id][1]}</span><img loading="lazy" src="og/q${q.id}.jpg"></div></div>`}
@@ -400,16 +403,16 @@ function exSubmit(){const left=EX.list.filter(q=>!(EX.ans[q.id]||[]).length).len
  if(left&&!window.__sx){window.__sx=1;const b=document.querySelector("#exbar .btn");b.textContent=`${left} unanswered — click again to submit`;return}
  window.__sx=0;EX.sub=true;
  // count exam answers in global progress too
- EX.list.forEach(q=>{state[q.id]={sel:(EX.ans[q.id]||[]).slice(),done:true,ok:exOk(q)}});save();
- try{const hist=JSON.parse(localStorage.getItem("mcq-exams")||"[]");hist.push({d:Date.now(),n:EX.list.length,ok:EX.list.filter(exOk).length});localStorage.setItem("mcq-exams",JSON.stringify(hist.slice(-20)))}catch(e){}
+ EX.list.forEach(q=>{const p=pts(EX.ans[q.id],q.a);state[q.id]={sel:(EX.ans[q.id]||[]).slice(),done:true,ok:p===1,pt:p}});save();
+ try{const hist=JSON.parse(localStorage.getItem("mcq-exams")||"[]");hist.push({d:Date.now(),n:EX.list.length,ok:EX.list.reduce((t,q)=>t+pts(EX.ans[q.id],q.a),0)});localStorage.setItem("mcq-exams",JSON.stringify(hist.slice(-20)))}catch(e){}
  render("exam")}
 function examRun(){const n=EX.list.length;let h="";
- if(EX.sub){const ok=EX.list.filter(exOk).length;const pct=Math.round(100*ok/n);const note20=(20*ok/n).toFixed(1);
+ if(EX.sub){const ok=Math.round(EX.list.reduce((t,q)=>t+pts(EX.ans[q.id],q.a),0)*10)/10;const pct=Math.round(100*ok/n);const note20=(20*ok/n).toFixed(1);
   const lvl=pct>=85?"GOAT level 🐐":pct>=70?"Very good 💪":pct>=50?"Pass — keep going 📚":"Review the handbook 📖";
-  const per=CH.filter(c=>EX.list.some(q=>q.c===c.id)).map(c=>{const qs=EX.list.filter(q=>q.c===c.id);const o=qs.filter(exOk).length;const p=Math.round(100*o/qs.length);
-   return `<div class="pc ${part(c.id)}"><div><b>${c.num}. ${c.t}</b><span>${o}/${qs.length}</span></div><div class="pb"><i style="width:${p}%;background:${p>=70?"#2e9e6a":p>=50?"#e0a419":"#c0392b"}"></i></div></div>`}).join("");
+  const per=CH.filter(c=>EX.list.some(q=>q.c===c.id)).map(c=>{const qs=EX.list.filter(q=>q.c===c.id);const o=Math.round(qs.reduce((t,q)=>t+pts(EX.ans[q.id],q.a),0)*10)/10;const p=Math.round(100*o/qs.length);
+   return `<div class="pc ${part(c.id)}"><div><b>${c.num}. ${c.t}</b><span>${fmt(o)}/${qs.length} pts</span></div><div class="pb"><i style="width:${p}%;background:${p>=70?"#2e9e6a":p>=50?"#e0a419":"#c0392b"}"></i></div></div>`}).join("");
   let hist=[];try{hist=JSON.parse(localStorage.getItem("mcq-exams")||"[]")}catch(e){}
-  h+=`<div class="hero2"><div class="goat">${pct>=85?"🐐":pct>=50?"🎉":"📖"}</div><div class="k">Exam result</div><h2>${ok} / ${n} correct · ${pct}%</h2><p>Grade: <b>${note20} / 20</b> · ${lvl}${hist.length>1?` · previous exam: ${Math.round(100*hist[hist.length-2].ok/hist[hist.length-2].n)}%`:""}</p>
+  h+=`<div class="hero2"><div class="goat">${pct>=85?"🐐":pct>=50?"🎉":"📖"}</div><div class="k">Exam result</div><h2>${fmt(ok)} / ${n} points · ${pct}%</h2><p>Grade: <b>${note20} / 20</b> · ${lvl}${hist.length>1?` · previous exam: ${Math.round(100*hist[hist.length-2].ok/hist[hist.length-2].n)}%`:""}</p>
   <div class="cta"><button class="w" onclick="EX.list=null;render('exam')">New exam</button><button class="g" onclick="exRetry()">Retry the same questions</button><button class="g" onclick="exWrongOnly()">Only my mistakes</button></div></div>
   <div class="card"><div class="sec">Score by chapter</div><div class="pcs">${per}</div></div>
   <h3 style="margin:18px 0 10px">Detailed correction</h3>`}
